@@ -10,19 +10,31 @@ body{
   border-radius: 30px;
 }
 main{
-  /* width: 100%; */
+  width: 100%;
   height: 500px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   background-color: white;
   border-radius: 30px;
 }
 .pageTitle{
-  text-align:
+  text-align: center;
 }
 .page{
-  width: 25%;
+  width: 100%;
   border: 1px solid black;
   color: black;
+}
+#headLine{
+  width: 100%;
+  text-align: center;
+}
+.navContainer{
+  padding: 0;
+  margin-bottom: 10px;
+}
+.navLinks{
+  margin: 2px;
+  font-size: 10px;
 }
