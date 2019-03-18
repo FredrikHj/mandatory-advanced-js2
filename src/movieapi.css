@@ -1,0 +1,28 @@
+body{
+  background-color: lightgrey;
+}
+#appBody{
+  margin-left: 10px; /*calc(50% - 200px);*/
+  margin-top: 20px;
+  width: 100%;
+  height: 500px;
+  background-color: white;
+  border-radius: 30px;
+}
+main{
+  /* width: 100%; */
+  height: 500px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 30px;
+}
+.pageTitle{
+  text-align:
+}
+.page{
+  width: 25%;
+  border: 1px solid black;
+  color: black;
+}
