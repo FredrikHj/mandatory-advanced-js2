@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 
 // ======================================= The App´s Funktion Components - Help Components =======================================
-
-
 function MovieTBody(props) {
-  console.log(props);
-  let incomminMovieData = props.pasthroughMovieData;
+  let movieData = props.pasthroughMovieData;
+  let removeMovie = props.pasthroughRemoveMovie;
+  let countMovie = -1;
 
   return (
-      incomminMovieData.map((obj, countMovie) => {
-        countMovie += 1;
-        console.log(obj);
-        return (
-          <tr key={countMovie}><td>{ obj.title }</td><td>{ obj.director }</td><td>{ obj.rating }</td><td><button className="deleteBtn"></button> Edit Details</td></tr>
-        );
-      })
+    movieData.map((obj) => {
+      countMovie += 1;
+      return (
+        <tr key={countMovie}><td>{ obj.title }</td><td>{ obj.director }</td><td>{ obj.rating }</td>
+        <td><button className="deleteBtn" id={ obj.id } onClick={ removeMovie } value={ countMovie }>Radera filmen</button></td><td value={ countMovie }>Edit</td><td value={ countMovie }>Details</td><td>{ obj.id }</td></tr>
+      );
+    })
   );
 }
 function Navbar() {

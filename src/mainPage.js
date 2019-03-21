@@ -4,7 +4,7 @@ import helpComponents from './helpComponents.js';
 function MainPage(props) {
   return (
     <div className="page">
-      <p className="pageTitle">Lägga till</p>
+      <p className="pageTitle">Huvudsida</p>
       <nav className="navContainer">
         <helpComponents.Navbar/>
       </nav>
@@ -17,7 +17,10 @@ function MainPage(props) {
         <tr><th>Title</th><th>Director</th><th>Rating</th></tr>
       </thead>
       <tbody>
-        <helpComponents.MovieTBody pasthroughMovieData={ props.movieListData }/>
+        <helpComponents.MovieTBody
+          pasthroughMovieData={ props.movieListData }
+          pasthroughRemoveMovie={ props.removeMovie }
+        />
       </tbody>
     </table>
     </div>
