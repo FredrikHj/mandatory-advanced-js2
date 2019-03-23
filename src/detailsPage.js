@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import helpComponents from './helpComponents.js';
+import {Helmet} from "react-helmet";
 
-function DetailsPage() {
+// React Router - ES6 modules
+import {Route, Switch } from "react-router";
+import { BrowserRouter as Router } from "react-router-dom";
+
+function DetailsPage(props) {
   return (
-    <div className="page">
-      <p className="pageTitle">Detaljer</p>
-      <nav className="navContainer">
-        <helpComponents.Navbar/>
-      </nav>
-    </div>
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{ props.routerSetting.appName + ' - ' + props.routerSetting.currentPage }</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
+
+      <p className="navLinks">Huvudsidan</p>
+      <p className="navLinks">Lägga till</p>
+    </>
   );
 }
 export default DetailsPage;

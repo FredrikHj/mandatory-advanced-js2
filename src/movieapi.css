@@ -9,11 +9,8 @@ body{
 }
 .page{
   width: 100%;
-  border: 1px solid black;
+
   color: black;
-}
-.pageTitle{
-  text-align: center;
 }
 .navLinks{
   margin: 2px;
@@ -23,14 +20,14 @@ body{
   position: relative;
   margin-top: -38px;
   margin-bottom: -13px;
-  margin-left: 2px;
-  width: 81px;
+  margin-left: 1px;
+  width: 158px;
   font-size: 10px;
   color: red;
   font-weight: bold;
 }
 .errorMessText{
-  width: 300px;
+  width: 150px;
 }
 /* ============== Main App ============== */
 #appBody{
@@ -55,6 +52,7 @@ main{
   text-align: center;
 }
 /* ============== Main page ============== */
+
 /* ============== Add page ============== */
 .addRow{
   display: flex;

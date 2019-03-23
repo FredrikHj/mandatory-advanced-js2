@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import helpComponents from './helpComponents.js';
+import {Helmet} from "react-helmet";
+
+// React Router - ES6 modules
+import {Route, Switch } from "react-router";
+import { BrowserRouter as Router } from "react-router-dom";
 
 function AddPage(props) {
   let errorStatus = props.errorMesses;
-  console.log(errorStatus);
   return (
-    <div className="page">
-      <p className="pageTitle">Lägga till / Editera</p>
-        <nav className="navContainer">
-          <helpComponents.Navbar/>
-        </nav>
+    <>
+    <Helmet>
+      <meta charSet="utf-8" />
+      <title>{ props.routerSetting.appName + ' - ' + props.routerSetting.currentPage }</title>
+      <link rel="canonical" href="http://mysite.com/example" />
+    </Helmet>
+    <p className="navLinks">Huvudsidan</p>
+    <p className="navLinks">Lägga till</p>
         <form onSubmit={ props.submitAddMovie }>
           <section className="addRow">
             <div>
@@ -41,7 +47,7 @@ function AddPage(props) {
             </div>
           </section>
         </form>
-    </div>
+    </>
   );
 }
 export default AddPage;

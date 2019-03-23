@@ -1,7 +1,11 @@
 import React, { Component, useState } from 'react';
 import axios from 'axios';
 import './movieapi.css';
-import Navbar from './helpComponents.js';
+import {Helmet} from "react-helmet";
+
+// React Router - ES6 modules
+import {Route, Switch } from "react-router";
+import { BrowserRouter as Router } from "react-router-dom";
 
 import Add_editPage from './add_editPage.js';
 import DetailsPage from './detailsPage.js';
@@ -20,17 +24,22 @@ class MainApp extends Component {
       addDirector: '',
       addDescription: '',
       addRating: 0.0,
-      searchMovie: '',
-      currentEditMovie: 0,
+      searchMovieText: '',
+//      currentEditMovie: 0,
       errorMessages: {
         title: {value: false, mess: ''},
         director:  {value: false, mess: ''},
         description: {value: false, mess: ''},
         rating:  {value: false, mess: ''},
+      },
+      routerSetting: {
+        appName: 'Movie API',
+        currentPage: 'Main',
       }
     };
     this.serverUrl = this.serverUrl;
     this.handleMovieData = this.handleMovieData.bind(this);
+    this.sortMovieList = this.sortMovieList.bind(this);
     this.totMovies = this.totMovies;
     this.addMovie = this.addMovie.bind(this);
     this.submitAddMovie = this.submitAddMovie.bind(this);
@@ -51,6 +60,14 @@ class MainApp extends Component {
     // The Ajax data is insurtet into the array above
     let getMoviesList = JSON.parse(this.requestMovies.responseText);
     this.setState({movieList: getMoviesList});
+
+
+  }
+  // Function is triggered every time I type a letter, it will sort on Title and Director. If field is emty the movieList is not change
+  sortMovieList(e) {
+    let getInsertedLetter = e.target.value;
+    this.setState({searchMovieText: getInsertedLetter});
+    console.log(getInsertedLetter);
   }
   // Function is triggered every time I type a letter in one of my fields and store it into the stated objects above.
   addMovie(e) {
@@ -93,65 +110,38 @@ class MainApp extends Component {
     // If not the condition is meet it will show a error mess. One mess at a time, the first mess is showing fist
     .catch((error) =>{
       let errorDataType = error.response;
-      console.log(errorDataType);
-
       let errorStr = error.response.data[0].message;
-      console.log(errorStr);
+
+      // String clean up -> turn str into array, one word is one index --> remove index 0 ---> loop through the array into a string sentence againg
+      let errorStrCleanUp = errorStr.split(' ');
+      errorStrCleanUp.shift();
+
+      let arrForDisplayWords = [];
+      let newErrorMess = '';
+      for (let errorStrCleanUpEachWord of errorStrCleanUp) {
+        arrForDisplayWords.push(errorStrCleanUpEachWord);
+        newErrorMess = arrForDisplayWords.join(' ');
+      }
+      let errorMessDisplay = newErrorMess.charAt(0).toUpperCase() + newErrorMess.slice(1);
+
 
       let validateCorrField = errorDataType.data[0].context.key;
-    //  let test = errorStr.charAt(1).toUpperCase() + errorStr.slice(2);
+      console.log(validateCorrField);
+
+      // Handle removing the validate error mess
       if (errorDataType.status === 400) {
-        this.setState({ errorMessages: {
-          ...this.state.errorMessages,
-            [validateCorrField]: {
-              value: true,
-              mess: errorStr
-            }
-          }
-        });
-        if (validateCorrField != 'title' && validateCorrField === 'director' || validateCorrField === 'description' || validateCorrField === 'rating') {
-          this.setState({ errorMessages: {
-            ...this.state.errorMessages,
-              title: {
-                value: false,
-                mess: ''
-              }
-            }
-          });
-        }
-        if (validateCorrField != 'director' && validateCorrField === ' title' || validateCorrField === 'description' || validateCorrField === 'rating') {
-          this.setState({ errorMessages: {
-            ...this.state.errorMessages,
-              director: {
-                value: false,
-                mess: ''
-              }
-            }
-          });
-        }
-        if (validateCorrField != 'description' && validateCorrField === ' title' || validateCorrField === ' director' || validateCorrField === 'rating') {
-          this.setState({ errorMessages: {
-            ...this.state.errorMessages,
-              description: {
-                value: false,
-                mess: ''
-              }
-            }
-          });
-        }
-        if (validateCorrField != 'rating' && validateCorrField === ' title' || validateCorrField === ' director' || validateCorrField === 'description') {
-          this.setState({ errorMessages: {
-            ...this.state.errorMessages,
-              rating: {
-                value: false,
-                mess: ''
-              }
-            }
-          });
-        }
+        this.setState({ errorMessages: {...this.state.errorMessages, [validateCorrField]: {value: true, mess: errorMessDisplay}}});
+        if (validateCorrField != 'title') this.setState({ errorMessages: {...this.state.errorMessages, title: {value: false, mess: ''}}});
+        if (validateCorrField != 'director') this.setState({ errorMessages: {...this.state.errorMessages, director: {value: false, mess: ''}}});
+        if (validateCorrField != 'description') this.setState({ errorMessages: {...this.state.errorMessages, description: {value: false, mess: ''}}});
+        if (validateCorrField != 'rating') this.setState({ errorMessages: {...this.state.errorMessages, rating: {value: false, mess: ''}}});
       }
     });
     e.preventDefault();
+  }
+  // Editera ====================================================================================================
+  editmovie() {
+
   }
   // ============================================================================================================
   removeMovie(e) {
@@ -172,24 +162,35 @@ class MainApp extends Component {
   }
 
   render() {
-    console.log(this.state.errorMessages);
+    console.log(this.state.searchMovieText);
+    // Send data for the page which need it
     return (
       <div id="appBody">
         <header>
-          <p id="headLine"> Movie API</p>
+          <p id="headLine">{ this.state.routerSetting.appName + ' - ' + this.state.routerSetting.currentPage }</p>
         </header>
         <main>
-        // Send data for the page which need it
-          <MainPage
-            movieListData={ this.state.movieList }
-            removeMovie={ this.removeMovie }
+          <div className="page" style={(this.state.routerSetting.currentPage != 'Main') ? {display: 'none'} : null}>
+            <MainPage
+              routerSetting={ this.state.routerSetting }
+              movieListData={ this.state.movieList }
+              searchMovie={ this.state.searchMovieText }
+              sortMovieList={ this.sortMovieList }
+              removeMovie={ this.removeMovie }
+              />
+          </div>
+          <div className="page" style={(this.state.routerSetting.currentPage != 'Add') ? {display: 'none'} : null}>
+            <Add_editPage
+              routerSetting={ this.state.routerSetting }
+              addMovie={ this.addMovie }
+              errorMesses={ this.state.errorMessages }
+              submitAddMovie={ this.submitAddMovie }
             />
-          <Add_editPage
-            addMovie={ this.addMovie }
-            errorMesses={ this.state.errorMessages }
-            submitAddMovie={ this.submitAddMovie }
-          />
-          <DetailsPage/>
+          </div>
+          <div className="page" style={(this.state.routerSetting.currentPage != 'Details') ? {display: 'none'} : null}>
+            <DetailsPage
+            routerSetting={ this.state.routerSetting }/>
+          </div>
         </main>
       </div>
     );
