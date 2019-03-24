@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import {Helmet} from "react-helmet";
 
 // React Router - ES6 modules
-import {Route, Switch } from "react-router";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 function MainPage(props) {
   let countMovie = -1;
@@ -23,8 +22,6 @@ function MainPage(props) {
         <title>{ props.routerSetting.appName + ' - ' + props.routerSetting.currentPage }</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
-      <p className="navLinks">Huvudsidan</p>
-      <p className="navLinks">Lägga till</p>
       <section id="searchMovie">
         Sök efter en film:
         <input type="text" onChange={ props.sortMovieList }/>
@@ -48,5 +45,4 @@ function MainPage(props) {
     </>
   );
 }
-//style={(props.searchMovie != '') ? {display: 'none'}: null}>
 export default MainPage;

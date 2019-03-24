@@ -4,8 +4,7 @@ import './movieapi.css';
 import {Helmet} from "react-helmet";
 
 // React Router - ES6 modules
-import {Route, Switch } from "react-router";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
 import Add_editPage from './add_editPage.js';
 import DetailsPage from './detailsPage.js';
@@ -163,36 +162,47 @@ class MainApp extends Component {
 
   render() {
     console.log(this.state.searchMovieText);
-    // Send data for the page which need it
+    // Send data for the page which need it  style={(this.state.currentPage === 'Add_editPage') ? {color: 'green', fontWeight: 'bold'} : null}
     return (
-      <div id="appBody">
-        <header>
-          <p id="headLine">{ this.state.routerSetting.appName + ' - ' + this.state.routerSetting.currentPage }</p>
-        </header>
-        <main>
-          <div className="page" style={(this.state.routerSetting.currentPage != 'Main') ? {display: 'none'} : null}>
-            <MainPage
-              routerSetting={ this.state.routerSetting }
-              movieListData={ this.state.movieList }
-              searchMovie={ this.state.searchMovieText }
-              sortMovieList={ this.sortMovieList }
-              removeMovie={ this.removeMovie }
+        <div id="appBody">
+          <header>
+            <p id="headLine">{ this.state.routerSetting.appName + ' - ' + this.state.routerSetting.currentPage }</p>
+            <Router id="routers">
+              <Link to="/" style={{textDecoration: 'none'}}><p>Hem</p></Link>
+              <Link to="/Add" style={{textDecoration: 'none'}}><p>Lägga till</p></Link>
+
+              <Route exact path="/Main" component={MainPage}/>
+              <Route path="/Add" component={
+                Add_editPage}
+                />
+              <Route path="/Edit" component={Add_editPage}/>
+              <Route path="/Details" component={DetailsPage}/>
+            </Router>
+          </header>
+          <main>
+            <div className="page" style={(this.state.routerSetting.currentPage != 'Main') ? {display: 'none'} : null}>
+              <MainPage
+                routerSetting={ this.state.routerSetting }
+                movieListData={ this.state.movieList }
+                searchMovie={ this.state.searchMovieText }
+                sortMovieList={ this.sortMovieList }
+                removeMovie={ this.removeMovie }
+                />
+            </div>
+            <div className="page" style={(this.state.routerSetting.currentPage != 'Add') ? {display: 'none'} : null}>
+              <Add_editPage
+                // routerSetting={ this.state.routerSetting }
+                // addMovie={ this.addMovie }
+                // errorMesses={ this.state.errorMessages }
+                // submitAddMovie={ this.submitAddMovie }
               />
-          </div>
-          <div className="page" style={(this.state.routerSetting.currentPage != 'Add') ? {display: 'none'} : null}>
-            <Add_editPage
-              routerSetting={ this.state.routerSetting }
-              addMovie={ this.addMovie }
-              errorMesses={ this.state.errorMessages }
-              submitAddMovie={ this.submitAddMovie }
-            />
-          </div>
-          <div className="page" style={(this.state.routerSetting.currentPage != 'Details') ? {display: 'none'} : null}>
-            <DetailsPage
-            routerSetting={ this.state.routerSetting }/>
-          </div>
-        </main>
-      </div>
+            </div>
+            <div className="page" style={(this.state.routerSetting.currentPage != 'Details') ? {display: 'none'} : null}>
+              <DetailsPage
+              routerSetting={ this.state.routerSetting }/>
+            </div>
+          </main>
+        </div>
     );
   }
 }
