@@ -22,26 +22,29 @@ function MainPage(props) {
         <title>{ props.routerSetting.appName + ' - ' + props.routerSetting.currentPage }</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
-      <section id="searchMovie">
-        Sök efter en film:
-        <input type="text" onChange={ props.sortMovieList }/>
-      </section>
-      <table>
-        <thead>
-          <tr><th>Title</th><th>Director</th><th>Rating</th></tr>
-        </thead>
-        <tbody>
-          {
-            filterList.map((obj) => {
-              countMovie += 1;
-              return (
-                <tr key={countMovie}><td>{ obj.title }</td><td>{ obj.director }</td><td>{ obj.rating }</td>
-                <td><button className="deleteBtn" id={ obj.id } onClick={ props.removeMovie } value={ countMovie }>Radera filmen</button></td><td value={ countMovie }>Edit</td><td value={ countMovie }>Details</td><td>{ obj.id }</td></tr>
-              );
-            })
-          }
-        </tbody>
-      </table>
+      <div className="page">
+
+        <section id="searchMovie">
+          Sök efter en film:
+          <input type="text" onChange={ props.sortMovieList }/>
+        </section>
+        <table>
+          <thead>
+            <tr><th>Title</th><th>Director</th><th>Rating</th></tr>
+          </thead>
+          <tbody>
+            {
+              filterList.map((obj) => {
+                countMovie += 1;
+                return (
+                  <tr key={countMovie}><td>{ obj.title }</td><td>{ obj.director }</td><td>{ obj.rating }</td>
+                  <td><button className="deleteBtn" id={ obj.id } onClick={ props.removeMovie } value={ countMovie }>Radera filmen</button></td><td value={ countMovie }>Edit</td><td value={ countMovie }>Details</td><td>{ obj.id }</td></tr>
+                );
+              })
+            }
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }

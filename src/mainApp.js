@@ -6,9 +6,9 @@ import {Helmet} from "react-helmet";
 // React Router - ES6 modules
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 
-import Add_editPage from './add_editPage.js';
-import DetailsPage from './detailsPage.js';
 import MainPage from './mainPage.js';
+//import AddeditPage from './add_editPage.js';
+//import DetailsPage from './detailsPage.js';
 
 let getMoviesList;
 
@@ -34,7 +34,7 @@ class MainApp extends Component {
       routerSetting: {
         appName: 'Movie API',
         currentPage: 'Main',
-      }
+      },
     };
     this.serverUrl = this.serverUrl;
     this.handleMovieData = this.handleMovieData.bind(this);
@@ -164,47 +164,46 @@ class MainApp extends Component {
     console.log(this.state.searchMovieText);
     // Send data for the page which need it  style={(this.state.currentPage === 'Add_editPage') ? {color: 'green', fontWeight: 'bold'} : null}
     return (
-        <div id="appBody">
-          <header>
-            <p id="headLine">{ this.state.routerSetting.appName + ' - ' + this.state.routerSetting.currentPage }</p>
-            <Router id="routers">
-              <Link to="/" style={{textDecoration: 'none'}}><p>Hem</p></Link>
-              <Link to="/Add" style={{textDecoration: 'none'}}><p>Lägga till</p></Link>
+      <div id="appBody">
+        <Router id="routers">
+          <p id="headLine">{ this.state.routerSetting.appName + ' - ' + this.state.routerSetting.currentPage }</p>
+          <Link to="/Main" style={{textDecoration: 'none'}}><p>Hem</p></Link>
+          <Link to="/Add" style={{textDecoration: 'none'}}><p>Lägga till</p></Link>
 
-              <Route exact path="/Main" component={MainPage}/>
-              <Route path="/Add" component={
-                Add_editPage}
-                />
-              <Route path="/Edit" component={Add_editPage}/>
-              <Route path="/Details" component={DetailsPage}/>
-            </Router>
-          </header>
-          <main>
-            <div className="page" style={(this.state.routerSetting.currentPage != 'Main') ? {display: 'none'} : null}>
-              <MainPage
-                routerSetting={ this.state.routerSetting }
-                movieListData={ this.state.movieList }
-                searchMovie={ this.state.searchMovieText }
-                sortMovieList={ this.sortMovieList }
-                removeMovie={ this.removeMovie }
-                />
-            </div>
-            <div className="page" style={(this.state.routerSetting.currentPage != 'Add') ? {display: 'none'} : null}>
-              <Add_editPage
-                // routerSetting={ this.state.routerSetting }
-                // addMovie={ this.addMovie }
-                // errorMesses={ this.state.errorMessages }
-                // submitAddMovie={ this.submitAddMovie }
-              />
-            </div>
-            <div className="page" style={(this.state.routerSetting.currentPage != 'Details') ? {display: 'none'} : null}>
-              <DetailsPage
-              routerSetting={ this.state.routerSetting }/>
-            </div>
-          </main>
+          <Route exact path="/Main" render={(props) => <MainPage {...props}
+            routerSetting={ this.state.routerSetting }
+            movieListData={ this.state.movieList }
+            searchMovie={ this.state.searchMovieText }
+            sortMovieList={ this.sortMovieList }
+            removeMovie={ this.removeMovie }
+            />}
+          />
+          <div style={(this.state.routerSetting.currentPage != 'Main') ? {display: 'none'} : null}>
+            <MainPage
+              routerSetting={ this.state.routerSetting }
+              movieListData={ this.state.movieList }
+              searchMovie={ this.state.searchMovieText }
+              sortMovieList={ this.sortMovieList }
+              removeMovie={ this.removeMovie }
+            />
         </div>
+
+      </Router>
+    </div>
     );
   }
 }
+// <Route path="/Add" render={(props) => <AddeditPage {...props} routerSetting={ this.state.routerSetting } />}/>
+// <Route path="/Edit" component={AddeditPage}/>
+//
+// <Route path="/Details" component={DetailsPage}/>
+// //
+//   //<Add_editPage
+//     // routerSetting={ this.state.routerSetting }
+//     // addMovie={ this.addMovie }
+//     // errorMesses={ this.state.errorMessages }
+//     // submitAddMovie={ this.submitAddMovie }
+// //  />
+//   //<DetailsPage routerSetting={ this.state.routerSetting }/>
 
 export default MainApp;

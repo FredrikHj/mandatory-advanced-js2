@@ -12,6 +12,9 @@ function DetailsPage(props) {
         <title>{ props.routerSetting.appName + ' - ' + props.routerSetting.currentPage }</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
+      <div className="page" style={(this.state.routerSetting.currentPage != 'Details') ? {display: 'none'} : null}>
+
+      </div>
     </>
   );
 }
