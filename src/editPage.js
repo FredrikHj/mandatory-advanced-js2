@@ -19,9 +19,10 @@ class EditPage extends Component {
         rating:  {value: false, mess: ''},
       },
     }
+    this.props = this.props;
     this.serverUrl = this.serverUrl;
     this.movieIdUpdating = this.movieIdUpdating;
-    this.pushEdit = this.pushEdit.bind(this);
+
     this.submitEditMovie = this.submitEditMovie.bind(this);
   }
   componentDidMount() {
@@ -30,17 +31,8 @@ class EditPage extends Component {
 
     //let movieIndexUpdating = this.props.indexCount;
     this.movieIdUpdating = this.props.match.params.id;
-    console.log(this.movieIdUpdating);
+    console.log(this.props);
   }
-  pushEdit() {
-    this.setState({routerSetting: {
-      ...this.state.routerSetting,
-      currentPage: 'Edit',
-      editMode: true
-    }})
-    console.log(this.state.routerSetting);
-  }
-
   submitEditMovie(e) {
     // let addedMovie = {
     //   "title": this.state.addTitle,
@@ -101,13 +93,12 @@ class EditPage extends Component {
     e.preventDefault();
   }
   render() {
-    console.log(this.props.pasthroughTitleData.appName);
     console.log(this.props);
     return (
       <>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>{this.props.pasthroughTitleData.appName + ' - ' + this.props.pasthroughTitleData.currentPage }</title>
+          <title>{ this.props.routerSetting.appName + ' - ' + this.props.routerSetting.currentPage }</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
         <div className="page" //style={(this.props.pasthroughTitleData.routerSetting.currentPage != 'Add') ? {display: 'none'} : null}

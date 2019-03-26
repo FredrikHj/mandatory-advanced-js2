@@ -6,10 +6,8 @@ import {Helmet} from "react-helmet";
 // React Router - ES6 modules
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 
-//import MainPage from './mainPage.js';
+import MainPage from './mainPage.js';
 import AddPage from './addPage.js';
-import EditPage from './editPage.js';
-import DetailsPage from './detailsPage.js';
 let getMoviesList;
 
 // ================================================ The App´s Function Components =================================================
@@ -24,7 +22,7 @@ class MainApp extends Component {
       addDescription: '',
       addRating: 0.0,
       searchMovieText: '',
-//      currentEditMovie: 0,
+
       errorMessages: {
         title: {value: false, mess: ''},
         director:  {value: false, mess: ''},
@@ -33,7 +31,7 @@ class MainApp extends Component {
       },
       routerSetting: {
         appName: 'Movie API',
-        currentPage: 'edit',
+        currentPage: 'Main',
         editMode: false
       },
       mainStart: true
@@ -42,6 +40,7 @@ class MainApp extends Component {
     this.handleMovieData = this.handleMovieData.bind(this);
     this.pushMain = this.pushMain.bind(this);
     this.pushAdd = this.pushAdd.bind(this);
+    this.pushEdit = this.pushEdit.bind(this);
     this.sortMovieList = this.sortMovieList.bind(this);
     this.totMovies = this.totMovies;
     this.addMovie = this.addMovie.bind(this);
@@ -70,7 +69,7 @@ class MainApp extends Component {
   pushMain() {
   this.setState({routerSetting: {
       ...this.state.routerSetting,
-      currentPage: 'Main'
+      currentPage: 'Edit'
     }})
   }
   pushAdd() {
@@ -78,6 +77,14 @@ class MainApp extends Component {
       ...this.state.routerSetting,
       currentPage: 'Add'
     }})
+  }
+  pushEdit() {
+    this.setState({routerSetting: {
+      ...this.state.routerSetting,
+      currentPage: 'Edit',
+      editMode: true
+    }})
+    console.log(this.state.routerSetting);
   }
   // Function is triggered every time I type a letter, it will sort on Title and Director. If field is emty the movieList is not change
   sortMovieList(e) {
@@ -174,81 +181,35 @@ class MainApp extends Component {
   }
 
   render() {
-    // For the rendering of the tablebody
-    let countMovie = -1;
-    let filterList = this.state.movieList.filter((movieListData) =>
-      {
-        console.log(movieListData);
-        return movieListData.title.includes(this.searchMovie)
-          || movieListData.director.includes(this.searchMovie)
-      }
-    )
 
-    //if (this.state.mainStart === 'true') return <Redirect to="/Main" />;
+    if (this.state.mainStart === 'true') return <Redirect to="/Main"/>;
     console.log(this.state.searchMovieText);
     // Send data for the page which need it  style={(this.state.currentPage === 'Add_editPage') ? {color: 'green', fontWeight: 'bold'} : null}
     return (
-      <Router id="routers">
-        <div id="appBody">
-
-          <Helmet>
-            <meta charSet="utf-8" />
-            <title>{ this.state.routerSetting.appName + ' - ' + this.state.routerSetting.currentPage }</title>
-          </Helmet>
-
-          <nav>
+      <div id="appBody">
+        <Router>
+          <p id="headLine">{ this.state.routerSetting.appName + ' - ' + this.state.routerSetting.currentPage }</p>
             <Link to="/Main" style={{textDecoration: 'none'}} onClick={ this.pushMain }><p>Hem</p></Link>
             <Link to="/Add" style={{textDecoration: 'none'}} onClick={ this.pushAdd }><p>Lägga till</p></Link>
-          </nav>
 
-          <div className="page" style={(this.state.routerSetting.currentPage != 'Main') ? {display: 'none'} : null}>
-            <section id="searchMovie">
-              Sök efter en film:
-              //<input type="text" onChange={ this.state.sortMovieList }/>
-            </section>
-            <table>
-              <thead>
-                <tr><th>Title</th><th>Director</th><th>Rating</th></tr>
-              </thead>
-              <tbody>
-                {
-                  filterList.map((obj) => {
-                    countMovie += 1;
-                    return (
-                      <tr key={countMovie}>
-                        <td>{ obj.title }</td><td>{ obj.director }</td><td>{ obj.rating }</td>
-                        <td>
-                          <button className="deleteBtn" id={ obj.id } onClick={ this.removeMovie } value={ countMovie }>Radera filmen</button>
-                        </td>
-                        <td value={ countMovie }>
-                          <Link to={"/Edit/" + obj.id} className="editBtn" id={ obj.id } value={ countMovie } onClick={ this.pushEdit }>Edit</Link>
-                        </td>
-                        <td value={ countMovie }>
-                          <Link to="/Details">Details</Link>
-                        </td>
-                        <td>{ obj.id }</td>
-                      </tr>
-                    );
-                  })
-                }
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <Route path="/Edit/:id" render={(props) => <EditPage {...props}
-        //  routerSetting ={ pasthroughTitleDatarouterSetting }
-        />}
-        />
-        <Route path="/Details" component={DetailsPage}/>
-        //<Route exact path="/Main" component={MainApp}/>
-        <Route path="/Add" render={(props) => <AddPage {...props}
-        addMovie={ this.addMovie }
-        submitAddMovie={ this.submitAddMovie }
-        errorMesses={ this.state.errorMessages }
-        routerSetting={ this.state.routerSetting }
-        />}
-        />
-      </Router>
+          <Route exact path="/Main" render={(props) => <MainPage {...props}
+            movieListData={ this.state.movieList }
+            routerSetting={ this.state.routerSetting }
+            sortMovieList={ this.sortMovieList }
+            searchMovie={ this.state.searchMovieText }
+            removeMovie={ this.removeMovie }
+            pushEdit={ this.pushEdit }
+            />}
+          />
+          <Route path="/Add" render={(props) => <AddPage {...props}
+            addMovie={ this.addMovie }
+            submitAddMovie={ this.submitAddMovie }
+            errorMesses={ this.state.errorMessages }
+            routerSetting={ this.state.routerSetting }
+            />}
+          />
+        </Router>
+      </div>
     );
   }
 }
