@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import {Helmet} from "react-helmet";
 
 // React Router - ES6 modules
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-function Add_editPage(props) {
+function AddPage(props) {
   let errorStatus = props.errorMesses;
   console.log(props);
   return (
@@ -50,4 +50,4 @@ function Add_editPage(props) {
     </>
   );
 }
-export default Add_editPage;
+export default AddPage;

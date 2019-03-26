@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {Helmet} from "react-helmet";
 
 // React Router - ES6 modules
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 function DetailsPage(props) {
   return (
