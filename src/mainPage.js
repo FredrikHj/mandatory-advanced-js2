@@ -50,7 +50,7 @@ function MainPage(props) {
                       <Link to={"/Edit/" + obj.id} className="editBtn" id={ obj.id } value={ countMovie } onClick={ props.pushEdit }>Edit</Link>
                     </td>
                     <td value={ countMovie }>
-                      <Link to="/Details">Details</Link>
+                      <Link to={"/Details/" + obj.id} className="detailsBtn" id={ obj.id } value={ countMovie } onClick={ props.pushDetails }>Details</Link>
                     </td>
                     <td>{ obj.id }</td>
                   </tr>
@@ -64,7 +64,10 @@ function MainPage(props) {
         routerSetting={ getRouterSetting }
         />}
       />
-      <Route path="/Details" component={DetailsPage}/>
+      <Route path="/Details" render={(props) => <DetailsPage {...props}
+        routerSetting={ getRouterSetting }
+        />}
+      />
       </Router>
     </>
   );

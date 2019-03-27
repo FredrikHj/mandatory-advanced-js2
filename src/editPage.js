@@ -10,7 +10,12 @@ class EditPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      movieEdit: null,
+      movieEdit: {
+        title: '',
+        director: '',
+        description: '',
+        rating: 0.0
+      },
 
       errorMessages: {
         title: {value: false, mess: ''},
@@ -21,9 +26,11 @@ class EditPage extends Component {
     }
     this.props = this.props;
     this.serverUrl = this.serverUrl;
-    //this.movieIdUpdating = this.movieIdUpdating;
 
     this.changeTitle = this.changeTitle.bind(this);
+    this.changeDirector = this.changeTitle.bind(this);
+    this.changeDescription = this.changeTitle.bind(this);
+    this.changeRating = this.changeTitle.bind(this);
     this.submitEditMovie = this.submitEditMovie.bind(this);
   }
   componentDidMount() {
@@ -44,11 +51,38 @@ class EditPage extends Component {
            this.setState({error: "Wrong Connection!!"})
          }
        });
-
-
-
+  }
+  componentWillUnmount() {
+    // this.setState({ movieEdit: {
+    //   title: '',
+    //   director: '',
+    //   description: '',
+    //   rating: ''
+    // }
+  //  })
   }
   changeTitle(e) {
+    this.setState({movieEdit: {
+      ...this.state.movieEdit,
+      title: e.target.value
+      }
+    });
+  }
+  changeDirector(e) {
+    this.setState({movieEdit: {
+      ...this.state.movieEdit,
+      title: e.target.value
+      }
+    });
+  }
+  changeDescription(e) {
+    this.setState({movieEdit: {
+      ...this.state.movieEdit,
+      title: e.target.value
+      }
+    });
+  }
+  changeRating(e) {
     this.setState({movieEdit: {
       ...this.state.movieEdit,
       title: e.target.value
@@ -65,8 +99,8 @@ class EditPage extends Component {
     axios.put(this.serverUrl + '/' +  this.movieIdUpdating).then((response) => {
       let myResponseId = response.data;
       console.log(myResponseId);
-      this.setState({ movieList: [
-          ...this.state.movieList,
+      this.setState({ movieEdit: [
+          ...this.state.movieEdit,
           myResponseId
         ]
       })
@@ -80,46 +114,59 @@ class EditPage extends Component {
       //     rating:  {value: false, mess: ''},
       //   }});
       // }
+
     })
     // If not the condition is meet it will show a error mess. One mess at a time, the first mess is showing fist
     .catch((error) =>{
       let errorDataType = error.response;
       console.log(errorDataType);
-      let errorStr = error.response.data[0].message;
-
-      // String clean up -> turn str into array, one word is one index --> remove index 0 ---> loop through the array into a string sentence againg
-      let errorStrCleanUp = errorStr.split(' ');
-      errorStrCleanUp.shift();
-
-      let arrForDisplayWords = [];
-      let newErrorMess = '';
-      for (let errorStrCleanUpEachWord of errorStrCleanUp) {
-        arrForDisplayWords.push(errorStrCleanUpEachWord);
-        newErrorMess = arrForDisplayWords.join(' ');
-      }
-      let errorMessDisplay = newErrorMess.charAt(0).toUpperCase() + newErrorMess.slice(1);
-
-
-      let validateCorrField = errorDataType.data[0].context.key;
-      console.log(validateCorrField);
-
-      // Handle removing the validate error mess
-      if (errorDataType.status === 400) {
-        this.setState({ errorMessages: {...this.state.errorMessages, [validateCorrField]: {value: true, mess: errorMessDisplay}}});
-        if (validateCorrField != 'title') this.setState({ errorMessages: {...this.state.errorMessages, title: {value: false, mess: ''}}});
-        if (validateCorrField != 'director') this.setState({ errorMessages: {...this.state.errorMessages, director: {value: false, mess: ''}}});
-        if (validateCorrField != 'description') this.setState({ errorMessages: {...this.state.errorMessages, description: {value: false, mess: ''}}});
-        if (validateCorrField != 'rating') this.setState({ errorMessages: {...this.state.errorMessages, rating: {value: false, mess: ''}}});
-      }
+      // let errorStr = error.response.data[0].message;
+      //
+      // // String clean up -> turn str into array, one word is one index --> remove index 0 ---> loop through the array into a string sentence againg
+      // let errorStrCleanUp = errorStr.split(' ');
+      // errorStrCleanUp.shift();
+      //
+      // let arrForDisplayWords = [];
+      // let newErrorMess = '';
+      // for (let errorStrCleanUpEachWord of errorStrCleanUp) {
+      //   arrForDisplayWords.push(errorStrCleanUpEachWord);
+      //   newErrorMess = arrForDisplayWords.join(' ');
+      // }
+      // let errorMessDisplay = newErrorMess.charAt(0).toUpperCase() + newErrorMess.slice(1);
+      //
+      //
+      // let validateCorrField = errorDataType.data[0].context.key;
+      // console.log(validateCorrField);
+      //
+      // // Handle removing the validate error mess
+      // if (errorDataType.status === 400) {
+      //   this.setState({ errorMessages: {...this.state.errorMessages, [validateCorrField]: {value: true, mess: errorMessDisplay}}});
+      //   if (validateCorrField != 'title') this.setState({ errorMessages: {...this.state.errorMessages, title: {value: false, mess: ''}}});
+      //   if (validateCorrField != 'director') this.setState({ errorMessages: {...this.state.errorMessages, director: {value: false, mess: ''}}});
+      //   if (validateCorrField != 'description') this.setState({ errorMessages: {...this.state.errorMessages, description: {value: false, mess: ''}}});
+      //   if (validateCorrField != 'rating') this.setState({ errorMessages: {...this.state.errorMessages, rating: {value: false, mess: ''}}});
+      // }
     });
+    this.setState({
+      movieEdit: {
+        ...this.state.movieEdit,
+        title: '',
+        director: '',
+        description: '',
+        rating: 0.0
+      }
+    })
     e.preventDefault();
   }
   render() {
     let data = this.state.movieEdit;
     console.log('Status:');
     console.log(data);
+    // Set first letter = Bigg
+    let BigTitle = data.title.charAt(0).toUpperCase() + data.title.slice(1);
+    let BigDirector = data.director.charAt(0).toUpperCase() + data.director.slice(1);
+    let BigDescription = data.description.charAt(0).toUpperCase() + data.description.slice(1);
 
-    let a = 'a';
     return (
       <>
         <Helmet>
@@ -127,31 +174,30 @@ class EditPage extends Component {
           <title>{ this.props.routerSetting.appName + ' - ' + this.props.routerSetting.currentPage }</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
-        <div className="page" //style={(this.props.pasthroughTitleData.routerSetting.currentPage != 'Add') ? {display: 'none'} : null}
-        >
+        <div className="page" style={(this.props.routerSetting.currentPage != 'Edit') ? {display: 'none'} : null}>
           <form onSubmit={ this.submitEditMovie }>
             <section className="addRow">
               <div>
                 <label htmlFor="addTitle">Titel <span className="errorMessContainer" style={(this.state.errorMessages.title.value ===  true)
                   ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ this.state.errorMessages.title.mess }</p></span> <br/>
-                  <input maxLenght="40" type="text" id="addTitle" value={a} onChange={this.changeTitle} />
+                <input type="text" id="addTitle" value={BigTitle} onChange={this.changeTitle}/>
                 </label><br/>
               </div>
               <div>
                 <label htmlFor="addDirector">Regissör <span className="errorMessContainer"><p className="errorMessText"></p></span><br/>
-                  <input type="text" id="addDirector"/>
+                  <input type="text" id="addDirector" value={BigDirector} onChange={this.changeDirector}/>
                 </label><br/>
               </div>
             </section>
             <section className="addRow">
               <div>
                 <label htmlFor="addDescription">Beskrivning <span className="errorMessContainer"><p className="errorMessText"></p></span><br/>
-                  <textarea id="addDescription"></textarea>
+                  <textarea id="addDescription" value={BigDescription} onChange={this.changeDescription}></textarea>
                 </label>
               </div>
               <div>
                 <label htmlFor="addRating">Betyg <span className="errorMessContainer"minLength="1.0"><p className="errorMessText"></p></span><br/>
-                  <input type="text" id="addRating"/><br/>
+                  <input type="text" id="addRating" value={data.rating} onChange={this.changeRating}/><br/>
                 </label>
                 <input type="submit" id="formSubmitBtn" value="Lägg till film"/>
               </div>

@@ -40,6 +40,8 @@ class MainApp extends Component {
     this.handleMovieData = this.handleMovieData.bind(this);
     this.pushMain = this.pushMain.bind(this);
     this.pushAdd = this.pushAdd.bind(this);
+    this.pushEdit = this.pushEdit.bind(this);
+    this.pushDetails = this.pushDetails.bind(this);
 
     this.sortMovieList = this.sortMovieList.bind(this);
     this.totMovies = this.totMovies;
@@ -76,6 +78,18 @@ class MainApp extends Component {
     this.setState({routerSetting: {
       ...this.state.routerSetting,
       currentPage: 'Add'
+    }})
+  }
+  pushEdit() {
+    this.setState({routerSetting: {
+      ...this.state.routerSetting,
+      currentPage: 'Edit'
+    }})
+  }
+  pushDetails() {
+    this.setState({routerSetting: {
+      ...this.state.routerSetting,
+      currentPage: 'Details'
     }})
   }
 
@@ -176,7 +190,7 @@ class MainApp extends Component {
   render() {
 
     if (this.state.mainStart === 'true') return <Redirect to="/"/>;
-    console.log(this.state.searchMovieText);
+    console.log(this.state.routerSetting);
     // Send data for the page which need it  style={(this.state.currentPage === 'Add_editPage') ? {color: 'green', fontWeight: 'bold'} : null}
     return (
       <div id="appBody">
@@ -192,6 +206,7 @@ class MainApp extends Component {
             searchMovie={ this.state.searchMovieText }
             removeMovie={ this.removeMovie }
             pushEdit={ this.pushEdit }
+            pushDetails={ this.pushDetails }
             />}
           />
           <Route path="/Add" render={(props) => <AddPage {...props}
