@@ -40,7 +40,7 @@ class MainApp extends Component {
     this.handleMovieData = this.handleMovieData.bind(this);
     this.pushMain = this.pushMain.bind(this);
     this.pushAdd = this.pushAdd.bind(this);
-    this.pushEdit = this.pushEdit.bind(this);
+
     this.sortMovieList = this.sortMovieList.bind(this);
     this.totMovies = this.totMovies;
     this.addMovie = this.addMovie.bind(this);
@@ -69,7 +69,7 @@ class MainApp extends Component {
   pushMain() {
   this.setState({routerSetting: {
       ...this.state.routerSetting,
-      currentPage: 'Edit'
+      currentPage: 'Main'
     }})
   }
   pushAdd() {
@@ -78,14 +78,7 @@ class MainApp extends Component {
       currentPage: 'Add'
     }})
   }
-  pushEdit() {
-    this.setState({routerSetting: {
-      ...this.state.routerSetting,
-      currentPage: 'Edit',
-      editMode: true
-    }})
-    console.log(this.state.routerSetting);
-  }
+
   // Function is triggered every time I type a letter, it will sort on Title and Director. If field is emty the movieList is not change
   sortMovieList(e) {
     let getInsertedLetter = e.target.value;
@@ -182,17 +175,17 @@ class MainApp extends Component {
 
   render() {
 
-    if (this.state.mainStart === 'true') return <Redirect to="/Main"/>;
+    if (this.state.mainStart === 'true') return <Redirect to="/"/>;
     console.log(this.state.searchMovieText);
     // Send data for the page which need it  style={(this.state.currentPage === 'Add_editPage') ? {color: 'green', fontWeight: 'bold'} : null}
     return (
       <div id="appBody">
         <Router>
           <p id="headLine">{ this.state.routerSetting.appName + ' - ' + this.state.routerSetting.currentPage }</p>
-            <Link to="/Main" style={{textDecoration: 'none'}} onClick={ this.pushMain }><p>Hem</p></Link>
+            <Link to="/" style={{textDecoration: 'none'}} onClick={ this.pushMain }><p>Hem</p></Link>
             <Link to="/Add" style={{textDecoration: 'none'}} onClick={ this.pushAdd }><p>Lägga till</p></Link>
 
-          <Route exact path="/Main" render={(props) => <MainPage {...props}
+          <Route exact path="/" render={(props) => <MainPage {...props}
             movieListData={ this.state.movieList }
             routerSetting={ this.state.routerSetting }
             sortMovieList={ this.sortMovieList }
