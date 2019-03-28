@@ -1,3 +1,4 @@
+// Kvar att fixa Edit med PUT och redigeringen + React router = stanna kvar vi refresh
 import React, { Component } from 'react';
 //import axios from 'axios';
 import './movieapi.css';
@@ -108,7 +109,7 @@ class MainPage extends Component {
     // Send data for the page which need it  style={(this.state.currentPage === 'Add_editPage') ? {color: 'green', fontWeight: 'bold'} : null}
     return (
       <div id="appBody">
-        <p className="pagesHeadLine">Movie API - {this.state.currentPage }</p>
+        <p id="pagesHeadLine">Movie API - {this.state.currentPage }</p>
         <Helmet>
           <meta charSet="utf-8" />
           <title>Movie API - Main</title>
@@ -119,7 +120,7 @@ class MainPage extends Component {
 
           <div className="page" style={(this.state.currentPage != 'Main') ? {display: 'none'} : null}>
             <section id="searchMovie">
-              Sök efter en film:
+              Sök efter en film:<br/>
               <input type="text" onChange={ this.sortMovieList }/>
             </section>
             <table>
@@ -142,7 +143,6 @@ class MainPage extends Component {
                         <td value={ countMovie }>
                           <Link to={"/Details/" + obj.id} className="detailsBtn" id={ obj.id } value={ countMovie } onClick={ this.pushDetails }>Details</Link>
                         </td>
-                        <td>{ obj.id }</td>
                       </tr>
                     );
                   })

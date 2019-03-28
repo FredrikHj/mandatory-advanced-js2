@@ -43,29 +43,17 @@ class EditPage extends Component {
     console.log(this.movieIdUpdating);
 
     axios.get(this.serverUrl + this.movieIdUpdating)
-      .then(response => {
-        console.log('Incomming respose:');
-        console.log(response);
-        this.setState({movieEdit: response.data });
-      })
-      .catch(error => {
-        console.log(error);
-         if (error.response && error.response.status === 404) {
-           this.setState({error: "Connection  faulty, contact webmaster!!!!"})
-         }
-      });
-
-  }
-  componentWillUnmount() {
-    // this.setState({
-    //   movieEdit: {
-    //     ...this.state.movieEdit,
-    //     title: '',
-    //     director: '',
-    //     description: '',
-    //     rating: 0.0
-    //   }
-    // })
+    .then(response => {
+      console.log('Incomming respose:');
+      console.log(response);
+      this.setState({movieEdit: response.data });
+    })
+    .catch(error => {
+      console.log(error);
+       if (error.response && error.response.status === 404) {
+         this.setState({error: "Connection  faulty, contact webmaster!!!!"})
+       }
+    });
   }
   changeTitle(e) {
     this.setState({movieEdit: {
@@ -96,33 +84,38 @@ class EditPage extends Component {
     });
   }
   submitEditMovie(e) {
-    // let addedMovie = {
-    //   "title": this.state.addTitle,
-    //   "description": this.state.addDescription,
-    //   "director": this.state.addDirector,
-    //   "rating": this.state.addRating
-    // }
-    axios.put(this.serverUrl + '/' +  this.movieIdUpdating).then((response) => {
-      this.setState({
-        redirect: true
-      })
+    let editMovie = {
+      "title": this.state.movieEdit.title,
+      "description": this.state.movieEdit.description,
+      "director": this.state.movieEdit.director,
+      "rating": this.state.movieEdit.rating
+    }
+    let putUrl = this.serverUrl + this.movieIdUpdating;
+    console.log(putUrl);
+    axios.put(putUrl, editMovie, {headers: {"Content-Type": "text/plain"}}
+  )
+    .then((response) => {
+      let myAddMovie = response.data;
+      // this.setState({
+      //
+      // })
 
       // If some error mess is showing it will remove all the error mess if the fields is according the condition
-      if (response.status === 201) {
-        this.setState({errorMessages: {
-          ...this.state.errorMessages,
-          title: {value: false, mess: ''},
-          director:  {value: false, mess: ''},
-          description: {value: false, mess: ''},
-          rating:  {value: false, mess: ''},
-        }});
-      }
+      // if (response.status === 201) {
+      //   this.setState({errorMessages: {
+      //     ...this.state.errorMessages,
+      //     title: {value: false, mess: ''},
+      //     director:  {value: false, mess: ''},
+      //     description: {value: false, mess: ''},
+      //     rating:  {value: false, mess: ''},
+      //   }});
+      // }
     })
     // If not the condition is meet it will show a error mess. One mess at a time, the first mess is showing fist
     .catch((error) =>{
-      let errorDataType = error.response;
-      console.log(errorDataType);
+      // let errorDataType = error.response;
       // let errorStr = error.response.data[0].message;
+      // console.log(errorStr);
       //
       // // String clean up -> turn str into array, one word is one index --> remove index 0 ---> loop through the array into a string sentence againg
       // let errorStrCleanUp = errorStr.split(' ');
@@ -167,33 +160,33 @@ class EditPage extends Component {
       <>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Movie API - Edit</title>
+          <title>Movie API - {this.props.currentPage}</title>
         </Helmet>
         <div className="page" style={(this.props.currentPage != 'Edit') ? {display: 'none'} : null}
         >
           <form onSubmit={ this.submitEditMovie }>
             <section className="addRow">
               <div>
-                <label htmlFor="addTitle">Titel <span className="errorMessContainer" style={(this.state.errorMessages.title.value ===  true)
-                  ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ this.state.errorMessages.title.mess }</p></span> <br/>
-                <input type="text" id="addTitle" value={BigTitle} onChange={this.changeTitle}/>
+                <label htmlFor="addTitle">Titel <br/>
+                <input type="text" id="addTitle" value={BigTitle} onChange={this.changeTitle}/><span className="errorMessContainer" style={(this.state.errorMessages.title.value ===  true)
+                  ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ this.state.errorMessages.title.mess }</p></span>
                 </label><br/>
               </div>
               <div>
-                <label htmlFor="addDirector">Regissör <span className="errorMessContainer"><p className="errorMessText"></p></span><br/>
-                  <input type="text" id="addDirector" value={BigDirector} onChange={this.changeDirector}/>
+                <label htmlFor="addDirector">Regissör <br/>
+                  <input type="text" id="addDirector" value={BigDirector} onChange={this.changeDirector}/> <span className="errorMessContainer"><p className="errorMessText"></p></span>
                 </label><br/>
               </div>
             </section>
             <section className="addRow">
               <div>
-                <label htmlFor="addDescription">Beskrivning <span className="errorMessContainer"><p className="errorMessText"></p></span><br/>
-                  <textarea id="addDescription" value={BigDescription} onChange={this.changeDescription}></textarea>
+                <label htmlFor="addDescription">Beskrivning <br/>
+                  <textarea id="addDescription" value={BigDescription} onChange={this.changeDescription}></textarea> <br/><span className="errorMessContainer"><p className="errorMessText"></p></span>
                 </label>
               </div>
               <div>
-                <label htmlFor="addRating">Betyg <span className="errorMessContainer"minLength="1.0"><p className="errorMessText"></p></span><br/>
-                  <input type="text" id="addRating" value={data.rating} onChange={this.changeRating}/><br/>
+                <label htmlFor="addRating">Betyg <br/>
+                  <input type="text" id="addRating" value={data.rating} onChange={this.changeRating}/><br/> <span className="errorMessContainer"minLength="1.0"><p className="errorMessText"></p></span>
                 </label>
               </div>
             </section>

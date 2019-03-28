@@ -39,7 +39,8 @@ class AddPage extends Component {
       "director": this.state.addDirector,
       "rating": this.state.addRating
     }
-    axios.post('http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies/', addedMovie).then((response) => {
+    axios.post('http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies/', addedMovie)
+    .then((response) => {
       let myAddMovie = response.data;
       //console.log(myAddMovie);
 
@@ -94,7 +95,7 @@ class AddPage extends Component {
       <>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Movie API - Add</title>
+          <title>Movie API - {this.props.currentPage}</title>
         </Helmet>
         <div className="page" style={(this.props.currentPage != 'Add') ? {display: 'none'} : null}>
           <form onSubmit={ this.submitAddMovie }>
