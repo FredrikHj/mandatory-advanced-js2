@@ -17,8 +17,6 @@ class AddPage extends Component {
         description: {value: false, mess: ''},
         rating:  {value: false, mess: ''},
      },
-     addRedirect: false,
-     addPage: true
    }
     this.addMovie = this.addMovie.bind(this);
     this.submitAddMovie = this.submitAddMovie.bind(this);
@@ -41,10 +39,10 @@ class AddPage extends Component {
       "director": this.state.addDirector,
       "rating": this.state.addRating
     }
-    axios.post('http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies' + '/', addedMovie).then((response) => {
-      this.setState({
-        addRedirect: true
-      })
+    axios.post('http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies/', addedMovie).then((response) => {
+      let myAddMovie = response.data;
+      //console.log(myAddMovie);
+
       // If some error mess is showing it will remove all the error mess if the fields is according the condition
       if (response.status === 201) {
         this.setState({errorMessages: {
@@ -55,6 +53,8 @@ class AddPage extends Component {
           rating:  {value: false, mess: ''},
         }});
       }
+      this.props.updateMovieList(myAddMovie);
+      this.props.pushMain();
     })
     // If not the con dition is meet it will show a error mess. One mess at a time, the first mess is showing fist
     .catch((error) => {
@@ -74,8 +74,6 @@ class AddPage extends Component {
         newErrorMess = arrForDisplayWords.join(' ');
       }
       let errorMessDisplay = newErrorMess.charAt(0).toUpperCase() + newErrorMess.slice(1);
-
-
       let validateCorrField = errorDataType.data[0].context.key;
       console.log(validateCorrField);
 
@@ -91,12 +89,6 @@ class AddPage extends Component {
     e.preventDefault();
   }
   render() {
-    if (this.state.addRedirect === true) {
-      return <Redirect to="/Main"/>;
-      this.props.pushMain();
-    }
-    console.log(this.state.addRedirect);
-    console.log(this.props.currentPage);
     let errorStatus = this.state.errorMessages;
     return (
       <>
@@ -144,9 +136,6 @@ class AddPage extends Component {
             <input type="submit" id="formSubmitAddBtn" value="Add Movie"/>
           </form>
         </div>
-        <Router>
-        <Route path="/Main" component={MainPage}/>
-        </Router>
       </>
     );
   }
