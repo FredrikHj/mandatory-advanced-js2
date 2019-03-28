@@ -4,7 +4,7 @@ import './movieapi.css';
 import {Helmet} from "react-helmet";
 
 // React Router - ES6 modules
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect, Link } from "react-router-dom";
 
 class EditPage extends Component {
   constructor(props) {
@@ -23,8 +23,8 @@ class EditPage extends Component {
         description: {value: false, mess: ''},
         rating:  {value: false, mess: ''},
       },
+      editPage: true
     }
-    this.props = this.props;
     this.serverUrl = this.serverUrl;
 
     this.changeTitle = this.changeTitle.bind(this);
@@ -34,7 +34,6 @@ class EditPage extends Component {
     this.submitEditMovie = this.submitEditMovie.bind(this);
   }
   componentDidMount() {
-    console.log('fe<sd');
     // Incomming data is requested and load in the funtions bellow based on the edit link I choosen
     let movieIdUpdating = this.props.match.params.id;
     console.log(this.movieIdUpdating);
@@ -167,14 +166,15 @@ class EditPage extends Component {
     let BigDirector = data.director.charAt(0).toUpperCase() + data.director.slice(1);
     let BigDescription = data.description.charAt(0).toUpperCase() + data.description.slice(1);
 
+    console.log(this.props.currentPage);
     return (
       <>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>{ this.props.routerSetting.appName + ' - ' + this.props.routerSetting.currentPage }</title>
-          <link rel="canonical" href="http://mysite.com/example" />
+          <title>Movie API - Edit</title>
         </Helmet>
-        <div className="page" style={(this.props.routerSetting.currentPage != 'Edit') ? {display: 'none'} : null}>
+        <div className="page" style={(this.props.currentPage != 'Edit') ? {display: 'none'} : null}
+        >
           <form onSubmit={ this.submitEditMovie }>
             <section className="addRow">
               <div>
@@ -199,7 +199,7 @@ class EditPage extends Component {
                 <label htmlFor="addRating">Betyg <span className="errorMessContainer"minLength="1.0"><p className="errorMessText"></p></span><br/>
                   <input type="text" id="addRating" value={data.rating} onChange={this.changeRating}/><br/>
                 </label>
-                <input type="submit" id="formSubmitBtn" value="Lägg till film"/>
+                <input type="submit" id="formSubmitBtn" value="Edit Movie"/>
               </div>
             </section>
           </form>

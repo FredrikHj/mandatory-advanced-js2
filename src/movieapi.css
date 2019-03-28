@@ -47,7 +47,11 @@ main{
   background-color: white;
   border-radius: 30px;
 }
-#headLine{
+.pagesHeadLine{
+  text-align: center;
+  width: 100%;
+}
+.headLine{
   width: 100%;
   text-align: center;
 }
