@@ -23,42 +23,49 @@ class EditPage extends Component {
         description: {value: false, mess: ''},
         rating:  {value: false, mess: ''},
       },
-      editPage: true
+      redirect: false
     }
     this.serverUrl = this.serverUrl;
+    this.movieIdUpdating = this.movieIdUpdating;
 
     this.changeTitle = this.changeTitle.bind(this);
-    this.changeDirector = this.changeTitle.bind(this);
-    this.changeDescription = this.changeTitle.bind(this);
-    this.changeRating = this.changeTitle.bind(this);
+    this.changeDirector = this.changeDirector.bind(this);
+    this.changeDescription = this.changeDescription.bind(this);
+    this.changeRating = this.changeRating.bind(this);
     this.submitEditMovie = this.submitEditMovie.bind(this);
   }
   componentDidMount() {
+    console.log('fesaf');
     // Incomming data is requested and load in the funtions bellow based on the edit link I choosen
-    let movieIdUpdating = this.props.match.params.id;
+    this.serverUrl = 'http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies/';
+    this.movieIdUpdating = this.props.match.params.id;
+    console.log('Inommande film: ');
     console.log(this.movieIdUpdating);
 
-    axios.get("http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies/" + movieIdUpdating)
-    .then(response => {
-      console.log('Incomming respose:');
-      console.log(response.data);
-         this.setState({movieEdit: response.data });
-       })
-       .catch(error => {
+    axios.get(this.serverUrl + this.movieIdUpdating)
+      .then(response => {
+        console.log('Incomming respose:');
+        console.log(response);
+        this.setState({movieEdit: response.data });
+      })
+      .catch(error => {
         console.log(error);
          if (error.response && error.response.status === 404) {
-           this.setState({error: "Wrong Connection!!"})
+           this.setState({error: "Connection  faulty, contact webmaster!!!!"})
          }
-       });
+      });
+
   }
   componentWillUnmount() {
-    // this.setState({ movieEdit: {
-    //   title: '',
-    //   director: '',
-    //   description: '',
-    //   rating: ''
-    // }
-  //  })
+    // this.setState({
+    //   movieEdit: {
+    //     ...this.state.movieEdit,
+    //     title: '',
+    //     director: '',
+    //     description: '',
+    //     rating: 0.0
+    //   }
+    // })
   }
   changeTitle(e) {
     this.setState({movieEdit: {
@@ -70,21 +77,21 @@ class EditPage extends Component {
   changeDirector(e) {
     this.setState({movieEdit: {
       ...this.state.movieEdit,
-      title: e.target.value
+      director: e.target.value
       }
     });
   }
   changeDescription(e) {
     this.setState({movieEdit: {
       ...this.state.movieEdit,
-      title: e.target.value
+      description: e.target.value
       }
     });
   }
   changeRating(e) {
     this.setState({movieEdit: {
       ...this.state.movieEdit,
-      title: e.target.value
+      rating: e.target.value
       }
     });
   }
@@ -96,24 +103,20 @@ class EditPage extends Component {
     //   "rating": this.state.addRating
     // }
     axios.put(this.serverUrl + '/' +  this.movieIdUpdating).then((response) => {
-      let myResponseId = response.data;
-      console.log(myResponseId);
-      this.setState({ movieEdit: [
-          ...this.state.movieEdit,
-          myResponseId
-        ]
+      this.setState({
+        redirect: true
       })
-      // If some error mess is showing it will remove all the error mess if the fields is according the condition
-      // if (response.status === 201) {
-      //   this.setState({errorMessages: {
-      //     ...this.state.errorMessages,
-      //     title: {value: false, mess: ''},
-      //     director:  {value: false, mess: ''},
-      //     description: {value: false, mess: ''},
-      //     rating:  {value: false, mess: ''},
-      //   }});
-      // }
 
+      // If some error mess is showing it will remove all the error mess if the fields is according the condition
+      if (response.status === 201) {
+        this.setState({errorMessages: {
+          ...this.state.errorMessages,
+          title: {value: false, mess: ''},
+          director:  {value: false, mess: ''},
+          description: {value: false, mess: ''},
+          rating:  {value: false, mess: ''},
+        }});
+      }
     })
     // If not the condition is meet it will show a error mess. One mess at a time, the first mess is showing fist
     .catch((error) =>{
@@ -146,27 +149,20 @@ class EditPage extends Component {
       //   if (validateCorrField != 'rating') this.setState({ errorMessages: {...this.state.errorMessages, rating: {value: false, mess: ''}}});
       // }
     });
-    this.setState({
-      movieEdit: {
-        ...this.state.movieEdit,
-        title: '',
-        director: '',
-        description: '',
-        rating: 0.0
-      }
-    })
+
     e.preventDefault();
   }
   render() {
+    console.log('Du tryckte på: ');
+    console.log(this.state.movieEdit);
     let data = this.state.movieEdit;
-    console.log('Status:');
-    console.log(data);
+
     // Set first letter = Bigg
     let BigTitle = data.title.charAt(0).toUpperCase() + data.title.slice(1);
     let BigDirector = data.director.charAt(0).toUpperCase() + data.director.slice(1);
     let BigDescription = data.description.charAt(0).toUpperCase() + data.description.slice(1);
 
-    console.log(this.props.currentPage);
+
     return (
       <>
         <Helmet>
@@ -199,9 +195,9 @@ class EditPage extends Component {
                 <label htmlFor="addRating">Betyg <span className="errorMessContainer"minLength="1.0"><p className="errorMessText"></p></span><br/>
                   <input type="text" id="addRating" value={data.rating} onChange={this.changeRating}/><br/>
                 </label>
-                <input type="submit" id="formSubmitBtn" value="Edit Movie"/>
               </div>
             </section>
+            <input type="submit" id="formSubmitEditBtn" value="Edit Movie"/>
           </form>
         </div>
       </>

@@ -5,7 +5,7 @@ import axios from 'axios';
 // React Router - ES6 modules
 import { BrowserRouter as Router, Route, Redirect, Link } from "react-router-dom";
 
-import MainApp from './mainApp.js';
+//import MainApp from './mainApp.js';
 import DetailsPage from './detailsPage.js';
 import EditPage from './editPage.js';
 
@@ -25,7 +25,7 @@ class MainPage extends Component {
 }
   componentDidMount() {
     // Incomming data is requested and load in the funtions bellow
-    this.serverUrl = 'http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies';
+    this.serverUrl = 'http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies/';
     this.requestMovies = new XMLHttpRequest();
     this.requestMovies.addEventListener('load', this.handleMovieData);
     this.requestMovies.open("GET", this.serverUrl);
@@ -44,16 +44,15 @@ class MainPage extends Component {
   sortMovieList(e) {
     let getInsertedLetter = e.target.value;
     this.setState({searchMovieText: getInsertedLetter});
-    console.log(getInsertedLetter);
   }
   removeMovie(e) {
     let targetRemoveBtnMovieIndex = e.target.value;
     let targetRemoveBtnMovieId = e.target.id;
+    console.log(targetRemoveBtnMovieId);
     let arrMovies = this.state.movieList;
-    console.log(arrMovies);
 
     // Remove the movie both from the server and the view will be rerender
-    axios.delete(this.serverUrl + '/' + targetRemoveBtnMovieId);
+    axios.delete(this.serverUrl + targetRemoveBtnMovieId);
       this.setState({ movieList: [
         ...this.state.movieList
       ]
@@ -66,18 +65,15 @@ class MainPage extends Component {
   //   // this.setState({mainPage: false});
   // }
   render() {
-    console.log(this.props.currentPage);
+    //console.log(this.props.currentPage);
     let countMovie = -1;
     let movieData = this.state.movieList;
-    console.log(this.searchMovie);
     let filterList = movieData.filter((movieListData) =>
       {
-        console.log(movieListData);
         return movieListData.title.includes(this.state.searchMovieText)
           || movieListData.director.includes(this.state.searchMovieText)
       }
     )
-    console.log(filterList);
     let getRouterSetting = this.routerSetting;
     return (
       <>
@@ -99,7 +95,6 @@ class MainPage extends Component {
             <tbody>
              {
                 filterList.map((obj) => {
-                  console.log(obj);
                   countMovie += 1;
                   return (
                     <tr key={countMovie}>
@@ -125,7 +120,7 @@ class MainPage extends Component {
               currentPage={this.props.currentPage}
           />}
         />
-        <Route path="/Details" render={(props) => <DetailsPage {...props}
+        <Route path="/Details/:id" render={(props) => <DetailsPage {...props}
               currentPage={this.props.currentPage}
           />}
         />

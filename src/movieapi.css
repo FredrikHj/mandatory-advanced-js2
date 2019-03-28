@@ -18,7 +18,7 @@ body{
 }
 .errorMessContainer{
   position: relative;
-  margin-top: -38px;
+  margin-top: -10px;
   margin-bottom: -13px;
   margin-left: 1px;
   width: 158px;
@@ -63,6 +63,11 @@ main{
   flex-direction: row;
   justify-content: space-around;
   margin-bottom: 20px;
-
+}
+#formSubmitAddBtn{
+  margin-left: 50%;
 }
 /* ============== Edit page ============== */
+#formSubmitEditBtn{
+  margin-left: 50%;
+}

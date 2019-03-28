@@ -42,9 +42,7 @@ class MainApp extends Component {
     this.setState({currentPage: 'Details'});
   }
   render() {
-    console.log(this.state.currentPage);
-    // if (this.state.addRedirect === true) return <Redirect to="/"/>;
-    console.log(this.state.routerSetting);
+
     // Send data for the page which need it  style={(this.state.currentPage === 'Add_editPage') ? {color: 'green', fontWeight: 'bold'} : null}
     return (
       <div id="appBody">
@@ -68,6 +66,7 @@ class MainApp extends Component {
           />
           <Route path="/Add" render={(props) => <AddPage {...props}
                 currentPage={this.state.currentPage}
+                pushMain={ this.pushMain }
             />}
           />
         </Router>

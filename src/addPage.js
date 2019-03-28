@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import {Helmet} from "react-helmet";
 import axios from 'axios';
+import MainPage from './mainPage.js';
 
 // React Router - ES6 modules
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 
 class AddPage extends Component {
   constructor(props) {
@@ -40,12 +41,8 @@ class AddPage extends Component {
       "director": this.state.addDirector,
       "rating": this.state.addRating
     }
-    axios.post(this.serverUrl + '/', addedMovie).then((response) => {
-      let myResponseId = response.data;
-      this.setState({ movieList: [
-          ...this.state.movieList,
-          myResponseId
-        ],
+    axios.post('http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies' + '/', addedMovie).then((response) => {
+      this.setState({
         addRedirect: true
       })
       // If some error mess is showing it will remove all the error mess if the fields is according the condition
@@ -59,10 +56,12 @@ class AddPage extends Component {
         }});
       }
     })
-    // If not the condition is meet it will show a error mess. One mess at a time, the first mess is showing fist
-    .catch((error) =>{
+    // If not the con dition is meet it will show a error mess. One mess at a time, the first mess is showing fist
+    .catch((error) => {
+      console.log(error);
       let errorDataType = error.response;
       let errorStr = error.response.data[0].message;
+      console.log(errorStr);
 
       // String clean up -> turn str into array, one word is one index --> remove index 0 ---> loop through the array into a string sentence againg
       let errorStrCleanUp = errorStr.split(' ');
@@ -88,12 +87,15 @@ class AddPage extends Component {
         if (validateCorrField != 'description') this.setState({ errorMessages: {...this.state.errorMessages, description: {value: false, mess: ''}}});
         if (validateCorrField != 'rating') this.setState({ errorMessages: {...this.state.errorMessages, rating: {value: false, mess: ''}}});
       }
-    });
+    })
     e.preventDefault();
   }
-
-
   render() {
+    if (this.state.addRedirect === true) {
+      return <Redirect to="/Main"/>;
+      this.props.pushMain();
+    }
+    console.log(this.state.addRedirect);
     console.log(this.props.currentPage);
     let errorStatus = this.state.errorMessages;
     return (
@@ -106,35 +108,45 @@ class AddPage extends Component {
           <form onSubmit={ this.submitAddMovie }>
             <section className="addRow">
               <div>
-                <label htmlFor="addTitle">Titel <span className="errorMessContainer" style={(errorStatus.title.value ===  true)
-                  ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ errorStatus.title.mess }</p></span> <br/>
+                <label htmlFor="addTitle">Titel  <br/>
                   <input type="text" id="addTitle" onChange={ this.addMovie }/>
+                  <span className="errorMessContainer" style={(errorStatus.title.value ===  true) ? {display: 'block'} : {display: 'none'} }>
+                    <p className="errorMessText">{ errorStatus.title.mess }</p>
+                  </span>
                 </label><br/>
               </div>
               <div>
-                <label htmlFor="addDirector">Regissör <span className="errorMessContainer" style={(errorStatus.director.value ===  true)
-                  ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ errorStatus.director.mess }</p></span><br/>
+                <label htmlFor="addDirector">Regissör <br/>
                   <input type="text" id="addDirector" onChange={ this.addMovie }/>
+                  <span className="errorMessContainer" style={(errorStatus.director.value ===  true)
+                    ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ errorStatus.director.mess }</p>
+                  </span>
                 </label><br/>
               </div>
             </section>
             <section className="addRow">
               <div>
-                <label htmlFor="addDescription">Beskrivning <span className="errorMessContainer" style={(errorStatus.description.value ===  true)
-                ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ errorStatus.description.mess }</p></span><br/>
+                <label htmlFor="addDescription">Beskrivning <br/>
                   <textarea id="addDescription" onChange={ this.addMovie }></textarea>
+                  <span className="errorMessContainer" style={(errorStatus.description.value ===  true)
+                    ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ errorStatus.description.mess }</p>
+                  </span>
                 </label>
               </div>
               <div>
-                <label htmlFor="addRating">Betyg <span className="errorMessContainer"minLength="1.0" style={(errorStatus.rating.value ===  true)
-                  ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ errorStatus.rating.mess }</p></span><br/>
+                <label htmlFor="addRating">Betyg <br/>
                   <input type="text" id="addRating" onChange={ this.addMovie }/><br/>
+                  <span className="errorMessContainer"minLength="1.0" style={(errorStatus.rating.value ===  true)
+                    ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ errorStatus.rating.mess }</p></span>
                 </label>
-                <input type="submit" id="formSubmitBtn" value="Add Movie"/>
               </div>
             </section>
+            <input type="submit" id="formSubmitAddBtn" value="Add Movie"/>
           </form>
         </div>
+        <Router>
+        <Route path="/Main" component={MainPage}/>
+        </Router>
       </>
     );
   }
