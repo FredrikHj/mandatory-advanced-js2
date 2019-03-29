@@ -49,32 +49,18 @@ class DetailsPage extends Component {
         </Helmet>
         <div className="page" style={(this.props.currentPage != 'Details') ? {display: 'none'} : null}
         >
-          <section className="addRow">
-            <div>
-              <label htmlFor="addTitle">Titel<br/>
-              <p id="addTitle">{ targetShowMovie.title }</p>
-              </label><br/>
-            </div>
-            <div>
-              <label htmlFor="addDirector">Regissör<br/>
-                <p id="addDirector">{ targetShowMovie.director }</p>
-              </label><br/>
-            </div>
-          </section>
-          <section className="addRow">
-            <div>
-              <label htmlFor="addDescription">Beskrivning<br/>
-                <p id="addDescription">{ targetShowMovie.description}</p>
-              </label>
-            </div>
-            <div>
-              <label htmlFor="addRating">Betyg<br/>
-                <p id="addRating">{ targetShowMovie.rating }</p><br/>
-              </label>
-              {/*<input type="submit" id="formSubmitBtn" value="Lägg till film"/> */}
-            </div>
-          </section>
-        </div>
+
+        <table id="movies">
+          <thead>
+            <tr><th>Titel</th><th>Regissör</th><th className="widthDesDet">Beskrivning</th><th>Betyg</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{ targetShowMovie.title }</td><td>{ targetShowMovie.director }</td><td className="widthDesDet">{ targetShowMovie.description }</td><td>{ targetShowMovie.rating }</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </>
     );
   }

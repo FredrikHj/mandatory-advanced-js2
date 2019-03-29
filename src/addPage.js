@@ -15,8 +15,9 @@ class AddPage extends Component {
         title: {value: false, mess: ''},
         director:  {value: false, mess: ''},
         description: {value: false, mess: ''},
-        rating:  {value: false, mess: ''},
+        rating:  {value: false, mess: ''}
      },
+     redirect: false
    }
     this.addMovie = this.addMovie.bind(this);
     this.submitAddMovie = this.submitAddMovie.bind(this);
@@ -26,13 +27,14 @@ class AddPage extends Component {
     let targetInputId = targetInput.id;
     let targetInputValue = targetInput.value;
 
-    if (targetInputId === 'addTitle') this.setState({addTitle: targetInputValue});
-    if (targetInputId === 'addDirector') this.setState({addDirector: targetInputValue});
-    if (targetInputId === 'addDescription') this.setState({addDescription: targetInputValue});
-    if (targetInputId === 'addRating') this.setState({addRating: targetInputValue});
+    if (targetInputId === 'title') this.setState({addTitle: targetInputValue});
+    if (targetInputId === 'director') this.setState({addDirector: targetInputValue});
+    if (targetInputId === 'description') this.setState({addDescription: targetInputValue});
+    if (targetInputId === 'rating') this.setState({addRating: targetInputValue});
   }
   // Function is triggered every time I push the Add movie and sent it into the server. =========================
   submitAddMovie(e) {
+    // Data wich contains my add movie
     let addedMovie = {
       "title": this.state.addTitle,
       "description": this.state.addDescription,
@@ -46,14 +48,18 @@ class AddPage extends Component {
 
       // If some error mess is showing it will remove all the error mess if the fields is according the condition
       if (response.status === 201) {
-        this.setState({errorMessages: {
-          ...this.state.errorMessages,
-          title: {value: false, mess: ''},
-          director:  {value: false, mess: ''},
-          description: {value: false, mess: ''},
-          rating:  {value: false, mess: ''},
-        }});
+        this.setState({
+          errorMessages: {
+            ...this.state.errorMessages,
+            title: {value: false, mess: ''},
+            director:  {value: false, mess: ''},
+            description: {value: false, mess: ''},
+            rating:  {value: false, mess: ''}
+          },
+          redirect: true
+        });
       }
+      // Call the callback function and send the data to it
       this.props.updateMovieList(myAddMovie);
       this.props.pushMain();
     })
@@ -91,6 +97,9 @@ class AddPage extends Component {
   }
   render() {
     let errorStatus = this.state.errorMessages;
+    if (this.state.redirect === true) {
+      return <Redirect to="/Main"/>;
+    }
     return (
       <>
         <Helmet>
@@ -99,44 +108,44 @@ class AddPage extends Component {
         </Helmet>
         <div className="page" style={(this.props.currentPage != 'Add') ? {display: 'none'} : null}>
           <form onSubmit={ this.submitAddMovie }>
-            <section className="addRow">
+            <section className="row1">
               <div>
-                <label htmlFor="addTitle">Titel  <br/>
-                  <input type="text" id="addTitle" onChange={ this.addMovie }/>
+                <label htmlFor="title">Titel  <br/>
+                  <input type="text" id="title" onChange={ this.addMovie }/>
                   <span className="errorMessContainer" style={(errorStatus.title.value ===  true) ? {display: 'block'} : {display: 'none'} }>
-                    <p className="errorMessText">{ errorStatus.title.mess }</p>
-                  </span>
+                    <p className="errorMessText">{ errorStatus.title.mess }</p></span>
                 </label><br/>
               </div>
-              <div>
-                <label htmlFor="addDirector">Regissör <br/>
-                  <input type="text" id="addDirector" onChange={ this.addMovie }/>
-                  <span className="errorMessContainer" style={(errorStatus.director.value ===  true)
-                    ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ errorStatus.director.mess }</p>
-                  </span>
+              <div id="directorContainer">
+                <label htmlFor="director">Regissör <br/>
+                  <input type="text" id="director" onChange={ this.addMovie }/>
+                  <span className="errorMessContainer" style={(errorStatus.director.value ===  true) ? {display: 'block'} : {display: 'none'} }>
+                  <p className="errorMessText">{ errorStatus.director.mess }</p></span>
                 </label><br/>
               </div>
             </section>
-            <section className="addRow">
-              <div>
-                <label htmlFor="addDescription">Beskrivning <br/>
-                  <textarea id="addDescription" onChange={ this.addMovie }></textarea>
-                  <span className="errorMessContainer" style={(errorStatus.description.value ===  true)
-                    ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ errorStatus.description.mess }</p>
-                  </span>
+            <section className="row2">
+              <div id="descriptionContainer">
+                <label htmlFor="description">Beskrivning <br/>
+                  <textarea id="description" onChange={ this.addMovie }></textarea>
+                  <span className="errorMessContainer" style={(errorStatus.description.value ===  true) ? {display: 'block'} : {display: 'none'} }>
+                  <p className="errorMessText">{ errorStatus.description.mess }</p></span>
                 </label>
               </div>
-              <div>
-                <label htmlFor="addRating">Betyg <br/>
-                  <input type="text" id="addRating" onChange={ this.addMovie }/><br/>
-                  <span className="errorMessContainer"minLength="1.0" style={(errorStatus.rating.value ===  true)
-                    ? {display: 'block'} : {display: 'none'} }><p className="errorMessText">{ errorStatus.rating.mess }</p></span>
+              <div id="ratingContainer">
+              <label htmlFor="rating">Betyg <br/>
+                  <input type="text" id="rating" onChange={ this.addMovie }/><br/>
+                  <span className="errorMessContainer" style={(errorStatus.rating.value ===  true) ? {display: 'block'} : {display: 'none'} }>
+                  <p className="errorMessText">{ errorStatus.rating.mess }</p></span>
                 </label>
               </div>
             </section>
-            <input type="submit" id="formSubmitAddBtn" value="Add Movie"/>
+            <input type="submit" id="formSubmitBtn" value="Add Movie"/>
           </form>
         </div>
+        <Router>
+        <Route path="/Main" component={MainPage} />
+        </Router>
       </>
     );
   }

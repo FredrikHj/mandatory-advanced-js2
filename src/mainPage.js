@@ -6,7 +6,7 @@ import {Helmet} from "react-helmet";
 import axios from 'axios';
 
 // React Router - ES6 modules
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import AddPage from './addPage.js';
 import EditPage from './editPage.js';
@@ -35,6 +35,7 @@ class MainPage extends Component {
     this.pushEdit = this.pushEdit.bind(this);
     this.pushDetails = this.pushDetails.bind(this);
     this.updateMovieList = this.updateMovieList.bind(this);
+    this.editMovieList = this.editMovieList.bind(this);
     this.totMovies = this.totMovies;
   }
   componentDidMount() {
@@ -55,7 +56,7 @@ class MainPage extends Component {
   }
     // Functions for navBtn
   pushMain() {
-    console.log('esdf');
+    console.log('dfs');
     this.setState({currentPage: 'Main'});
   }
   pushAdd() {
@@ -72,17 +73,25 @@ class MainPage extends Component {
     let getInsertedLetter = e.target.value;
     this.setState({searchMovieText: getInsertedLetter});
   }
-  updateMovieList(movieAdd) {
-    console.log(movieAdd);
+  // A callback which will update the movieList with its incomming data
+  updateMovieList(addMovie) {
     this.setState({movieList: [
       ...this.state.movieList,
-      movieAdd]
+      addMovie]
     });
+  }
+  editMovieList(editMovie) {
+    console.log(editMovie);
+    this.setState({movieList: [
+      ...this.state.movieList,
+      editMovie]
+    });
+    // Removing the last index wich not contain any id from the server
+    this.state.movieList.pop();
   }
   removeMovie(e) {
     let targetRemoveBtnMovieIndex = e.target.value;
     let targetRemoveBtnMovieId = e.target.id;
-    console.log(targetRemoveBtnMovieId);
     let arrMovies = this.state.movieList;
 
     // Remove the movie both from the server and the view will be rerender
@@ -95,7 +104,7 @@ class MainPage extends Component {
     this.setState({ movieList: newMovieList});
   }
   render() {
-    console.log(this.state.movieList);
+    console.log(this.state.currentPage);
     let countMovie = -1;
     let movieData = this.state.movieList;
     let filterList = movieData.filter((movieListData) =>
@@ -112,7 +121,7 @@ class MainPage extends Component {
         <p id="pagesHeadLine">Movie API - {this.state.currentPage }</p>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Movie API - Main</title>
+          <title>Movie API - {this.state.currentPage }</title>
         </Helmet>
         <Router>
           <Link to="/Main" style={{textDecoration: 'none'}} onClick={ this.pushMain }><p>Hem</p></Link>
@@ -123,13 +132,14 @@ class MainPage extends Component {
               Sök efter en film:<br/>
               <input type="text" onChange={ this.sortMovieList }/>
             </section>
-            <table>
+            <table id="movies">
               <thead>
-                <tr><th>Title</th><th>Director</th><th>Rating</th></tr>
+                <tr><th>Titel</th><th>Regissör</th><th>Betyg</th><th colSpan="3">Verktyg</th></tr>
               </thead>
               <tbody>
                {
                   filterList.map((obj) => {
+                    console.log(obj);
                     countMovie += 1;
                     return (
                       <tr key={countMovie}>
@@ -151,17 +161,19 @@ class MainPage extends Component {
             </table>
           </div>
           <Route path="/Add" render={(props) => <AddPage {...props}
-              currentPage={this.state.currentPage}
-              pushMain={ this.pushMain }
-              updateMovieList={this.updateMovieList}
+            currentPage={this.state.currentPage}
+            pushMain={ this.pushMain }
+            updateMovieList={this.updateMovieList}
             />}
           />
           <Route path="/Edit/:id" render={(props) => <EditPage {...props}
-                currentPage={this.state.currentPage}
+            currentPage={this.state.currentPage}
+            editMovieList={this.editMovieList}
+            pushMain={ this.pushMain }
             />}
           />
           <Route path="/Details/:id" render={(props) => <DetailsPage {...props}
-                currentPage={this.state.currentPage}
+            currentPage={this.state.currentPage}
             />}
           />
         </Router>

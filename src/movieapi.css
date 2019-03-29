@@ -27,12 +27,41 @@ body{
 }
 .errorMessText{
   width: 150px;
+  margin-top: 15px;
+}
+
+/* Table style */
+#movies {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#movies td, #movies th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#movies tr:nth-child(even){
+  background-color: #f2f2f2;
+}
+
+#movies tr:hover{
+  background-color: #ddd;
+}
+
+#movies th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #4CAF50;
+  color: white;
 }
 /* ============== Main App ============== */
 #appBody{
-  margin-left: calc(50% - 200px);
+  margin-left: calc(50% - 300px);
   margin-top: 10%;
-  width: 400px;
+  width: 600px;
   background-color: white;
   border-radius: 30px;
   padding-top: 5px;
@@ -63,17 +92,40 @@ main{
   top: -53px;
   left: 50%;
 }
-/* ============== Add page ============== */
-.addRow{
+/* ============== Add / Edit page ============== */
+.row1{
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   margin-bottom: 20px;
 }
-#formSubmitAddBtn{
-  margin-left: 50%;
+.row2{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
 }
-/* ============== Edit page ============== */
-#formSubmitEditBtn{
-  margin-left: 50%;
+#directorContainer{
+  margin-left: 90px;
+}
+#descriptionContainer{
+  margin-left: 82px;
+}
+#description{
+  width: 250px;
+  height: 100px;
+  overflow-y: auto;
+}
+#formSubmitBtn{
+  position: relative;
+  top: -78px;
+  left: 403px;
+}
+/* ============== Details page ============== */
+.widthDesDet{
+  width: 262px;
+}
+#retunBtnToMain{
+  position: relative;
+  top: 9px;
+  left: 269px;
 }
