@@ -4,7 +4,7 @@ import './movieapi.css';
 import {Helmet} from "react-helmet";
 
 // React Router - ES6 modules
-import { BrowserRouter as Router, Route, Redirect, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link , Redirect} from "react-router-dom";
 
 class EditPage extends Component {
   constructor(props) {
@@ -16,6 +16,7 @@ class EditPage extends Component {
         description: '',
         rating: 0.0
       },
+      redirect: false,
 
       errorMessages: {
         title: {value: false, mess: ''},
@@ -23,7 +24,6 @@ class EditPage extends Component {
         description: {value: false, mess: ''},
         rating:  {value: false, mess: ''},
       },
-      redirect: false
     }
     this.serverUrl = this.serverUrl;
     this.movieIdUpdating = this.movieIdUpdating;
@@ -35,7 +35,6 @@ class EditPage extends Component {
     this.submitEditMovie = this.submitEditMovie.bind(this);
   }
   componentDidMount() {
-    console.log('fesaf');
     // Incomming data is requested and load in the funtions bellow based on the edit link I choosen
     this.serverUrl = 'http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies/';
     this.movieIdUpdating = this.props.match.params.id;
@@ -98,17 +97,17 @@ class EditPage extends Component {
       let myAddMovie = response.data;
       //If some error mess is showing it will remove all the error mess if the fields is according the condition
       if (response.status === 201) {
-        this.setState({errorMessages: {
-          ...this.state.errorMessages,
-          title: {value: false, mess: ''},
-          director:  {value: false, mess: ''},
-          description: {value: false, mess: ''},
-          rating:  {value: false, mess: ''},
-        }});
+        this.setState({
+          errorMessages: {
+            ...this.state.errorMessages,
+            title: {value: false, mess: ''},
+            director:  {value: false, mess: ''},
+            description: {value: false, mess: ''},
+            rating:  {value: false, mess: ''}
+          },
+          redirect: true
+        });
       }
-      // Call the callback function and send the data to it
-      this.props.editMovieList(editMovie);
-      this.props.pushMain();
     })
     // If not the condition is meet it will show a error mess. One mess at a time, the first mess is showing fist
     .catch((error) =>{
@@ -146,8 +145,8 @@ class EditPage extends Component {
     e.preventDefault();
   }
   render() {
-    console.log('Du tryckte på: ');
-    console.log(this.state.movieEdit);
+    if (this.state.redirect === true) return <Redirect to="/Main"/>;
+
     let data = this.state.movieEdit;
 
     // Set first letter = Bigg
@@ -155,15 +154,14 @@ class EditPage extends Component {
     let BigDirector = data.director.charAt(0).toUpperCase() + data.director.slice(1);
     let BigDescription = data.description.charAt(0).toUpperCase() + data.description.slice(1);
 
-
     return (
       <>
+        <p id="pagesHeadLine">Movie API - Editera</p>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Movie API - {this.props.currentPage}</title>
+          <title>Movie API - Editera</title>
         </Helmet>
-        <div className="page" style={(this.props.currentPage != 'Edit') ? {display: 'none'} : null}
-        >
+        <div className="page">
           <form onSubmit={ this.submitEditMovie }>
             <section className="row1">
               <div>

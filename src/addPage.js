@@ -11,6 +11,11 @@ class AddPage extends Component {
     super(props);
     // Sett intialstate for the functions in the app. Group some of them together
     this.state = {
+      title: '',
+      director: '',
+      description: '',
+      rating: 0.0,
+
       errorMessages: {
         title: {value: false, mess: ''},
         director:  {value: false, mess: ''},
@@ -27,24 +32,28 @@ class AddPage extends Component {
     let targetInputId = targetInput.id;
     let targetInputValue = targetInput.value;
 
-    if (targetInputId === 'title') this.setState({addTitle: targetInputValue});
-    if (targetInputId === 'director') this.setState({addDirector: targetInputValue});
-    if (targetInputId === 'description') this.setState({addDescription: targetInputValue});
-    if (targetInputId === 'rating') this.setState({addRating: targetInputValue});
+    if (targetInputId === 'title') this.setState({title: targetInputValue});
+    if (targetInputId === 'director') this.setState({director: targetInputValue});
+    if (targetInputId === 'description') this.setState({description: targetInputValue});
+    if (targetInputId === 'rating') this.setState({rating: targetInputValue});
   }
   // Function is triggered every time I push the Add movie and sent it into the server. =========================
   submitAddMovie(e) {
     // Data wich contains my add movie
     let addedMovie = {
-      "title": this.state.addTitle,
-      "description": this.state.addDescription,
-      "director": this.state.addDirector,
-      "rating": this.state.addRating
+      "title": this.state.title,
+      "description": this.state.description,
+      "director": this.state.director,
+      "rating": this.state.rating
     }
-    axios.post('http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies/', addedMovie)
+    axios({
+      method: 'post',
+      url: 'http://ec2-13-53-132-57.eu-north-1.compute.amazonaws.com:3000/movies/',
+      headers: {'Content-Type': 'application/json'},
+      data: addedMovie
+    })
     .then((response) => {
       let myAddMovie = response.data;
-      //console.log(myAddMovie);
 
       // If some error mess is showing it will remove all the error mess if the fields is according the condition
       if (response.status === 201) {
@@ -56,12 +65,13 @@ class AddPage extends Component {
             description: {value: false, mess: ''},
             rating:  {value: false, mess: ''}
           },
-          redirect: true
+          redirect: true,
         });
       }
       // Call the callback function and send the data to it
-      this.props.updateMovieList(myAddMovie);
-      this.props.pushMain();
+      console.log(this.props.updateMovieList);
+      //this.props.addMovieList(myAddMovie);
+      //this.props.pushMain();
     })
     // If not the con dition is meet it will show a error mess. One mess at a time, the first mess is showing fist
     .catch((error) => {
@@ -96,17 +106,16 @@ class AddPage extends Component {
     e.preventDefault();
   }
   render() {
+    if (this.state.redirect === true) return <Redirect to="/Main"/>;
     let errorStatus = this.state.errorMessages;
-    if (this.state.redirect === true) {
-      return <Redirect to="/Main"/>;
-    }
     return (
       <>
+      <p id="pagesHeadLine">Movie API - Lägga till</p>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Movie API - {this.props.currentPage}</title>
+          <title>Movie API - Lägga till</title>
         </Helmet>
-        <div className="page" style={(this.props.currentPage != 'Add') ? {display: 'none'} : null}>
+        <div className="page">
           <form onSubmit={ this.submitAddMovie }>
             <section className="row1">
               <div>
@@ -143,9 +152,6 @@ class AddPage extends Component {
             <input type="submit" id="formSubmitBtn" value="Add Movie"/>
           </form>
         </div>
-        <Router>
-        <Route path="/Main" component={MainPage} />
-        </Router>
       </>
     );
   }

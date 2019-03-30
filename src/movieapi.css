@@ -2,7 +2,6 @@
 body{
   background-color: lightgrey;
 }
-
 .navContainer{
   padding: 0;
   margin-bottom: 10px;
@@ -79,8 +78,13 @@ main{
   border-radius: 30px;
 }
 #pagesHeadLine{
+  position: relative;
   text-align: center;
   width: 100%;
+  top: -110px;
+}
+#headLinks{
+  margin-top: 35px;
 }
 .headLine{
   width: 100%;

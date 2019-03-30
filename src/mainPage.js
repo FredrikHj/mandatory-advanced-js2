@@ -1,16 +1,11 @@
 // Kvar att fixa Edit med PUT och redigeringen + React router = stanna kvar vi refresh
 import React, { Component } from 'react';
-//import axios from 'axios';
 import './movieapi.css';
 import {Helmet} from "react-helmet";
 import axios from 'axios';
 
 // React Router - ES6 modules
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-
-import AddPage from './addPage.js';
-import EditPage from './editPage.js';
-import DetailsPage from './detailsPage.js';
+import { BrowserRouter as Router, Route, Link, Redirect} from "react-router-dom";
 let getMoviesList;
 
 // ================================================ The App´s Function Components =================================================
@@ -21,21 +16,12 @@ class MainPage extends Component {
     this.state = {
       movieList: [],
       searchMovieText: '',
-      currentPage: 'Main'
     }
-    //this.location = this.location
-    //this.headLine = this.headLine;
+
     this.serverUrl = this.serverUrl;
     this.handleMovieData = this.handleMovieData.bind(this);
     this.sortMovieList = this.sortMovieList.bind(this);
     this.removeMovie = this.removeMovie.bind(this);
-
-    this.pushMain = this.pushMain.bind(this);
-    this.pushAdd = this.pushAdd.bind(this);
-    this.pushEdit = this.pushEdit.bind(this);
-    this.pushDetails = this.pushDetails.bind(this);
-    this.updateMovieList = this.updateMovieList.bind(this);
-    this.editMovieList = this.editMovieList.bind(this);
     this.totMovies = this.totMovies;
   }
   componentDidMount() {
@@ -55,40 +41,13 @@ class MainPage extends Component {
     this.setState({movieList: getMoviesList});
   }
     // Functions for navBtn
-  pushMain() {
-    console.log('dfs');
-    this.setState({currentPage: 'Main'});
-  }
-  pushAdd() {
-    this.setState({currentPage: 'Add'});
-  }
-  pushEdit() {
-    this.setState({currentPage: 'Edit'});
-  }
-  pushDetails() {
-    this.setState({currentPage: 'Details'});
-  }
   // Function is triggered every time I type a letter, it will sort on Title and Director. If field is emty the movieList is not change
   sortMovieList(e) {
     let getInsertedLetter = e.target.value;
     this.setState({searchMovieText: getInsertedLetter});
   }
   // A callback which will update the movieList with its incomming data
-  updateMovieList(addMovie) {
-    this.setState({movieList: [
-      ...this.state.movieList,
-      addMovie]
-    });
-  }
-  editMovieList(editMovie) {
-    console.log(editMovie);
-    this.setState({movieList: [
-      ...this.state.movieList,
-      editMovie]
-    });
     // Removing the last index wich not contain any id from the server
-    this.state.movieList.pop();
-  }
   removeMovie(e) {
     let targetRemoveBtnMovieIndex = e.target.value;
     let targetRemoveBtnMovieId = e.target.id;
@@ -104,7 +63,6 @@ class MainPage extends Component {
     this.setState({ movieList: newMovieList});
   }
   render() {
-    console.log(this.state.currentPage);
     let countMovie = -1;
     let movieData = this.state.movieList;
     let filterList = movieData.filter((movieListData) =>
@@ -115,19 +73,15 @@ class MainPage extends Component {
     )
     let getRouterSetting = this.routerSetting;
 
-    // Send data for the page which need it  style={(this.state.currentPage === 'Add_editPage') ? {color: 'green', fontWeight: 'bold'} : null}
     return (
-      <div id="appBody">
-        <p id="pagesHeadLine">Movie API - {this.state.currentPage }</p>
+      <>
+        <p id="pagesHeadLine">Movie API - Huvudsida</p>
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Movie API - {this.state.currentPage }</title>
+          <title>Movie API - Huvudsida</title>
         </Helmet>
         <Router>
-          <Link to="/Main" style={{textDecoration: 'none'}} onClick={ this.pushMain }><p>Hem</p></Link>
-          <Link to="/Add" style={{textDecoration: 'none'}} onClick={ this.pushAdd }><p>Lägga till</p></Link>
-
-          <div className="page" style={(this.state.currentPage != 'Main') ? {display: 'none'} : null}>
+          <div className="page">
             <section id="searchMovie">
               Sök efter en film:<br/>
               <input type="text" onChange={ this.sortMovieList }/>
@@ -139,7 +93,6 @@ class MainPage extends Component {
               <tbody>
                {
                   filterList.map((obj) => {
-                    console.log(obj);
                     countMovie += 1;
                     return (
                       <tr key={countMovie}>
@@ -148,10 +101,10 @@ class MainPage extends Component {
                           <button className="deleteBtn" id={ obj.id } onClick={ this.removeMovie } value={ countMovie }>Radera filmen</button>
                         </td>
                         <td value={ countMovie }>
-                          <Link to={"/Edit/" + obj.id} className="editBtn" id={ obj.id } value={ countMovie } onClick={ this.pushEdit }>Edit</Link>
+                          <Link to={"/Edit/" + obj.id} id={ obj.id } value={ countMovie }>Edit</Link>
                         </td>
                         <td value={ countMovie }>
-                          <Link to={"/Details/" + obj.id} className="detailsBtn" id={ obj.id } value={ countMovie } onClick={ this.pushDetails }>Details</Link>
+                          <Link to={"/Details/" + obj.id} id={ obj.id } value={ countMovie } onClick={ this.detailsPage }>Details</Link>
                         </td>
                       </tr>
                     );
@@ -160,26 +113,9 @@ class MainPage extends Component {
               </tbody>
             </table>
           </div>
-          <Route path="/Add" render={(props) => <AddPage {...props}
-            currentPage={this.state.currentPage}
-            pushMain={ this.pushMain }
-            updateMovieList={this.updateMovieList}
-            />}
-          />
-          <Route path="/Edit/:id" render={(props) => <EditPage {...props}
-            currentPage={this.state.currentPage}
-            editMovieList={this.editMovieList}
-            pushMain={ this.pushMain }
-            />}
-          />
-          <Route path="/Details/:id" render={(props) => <DetailsPage {...props}
-            currentPage={this.state.currentPage}
-            />}
-          />
         </Router>
-      </div>
+      </>
     );
   }
 }
-
 export default MainPage;
