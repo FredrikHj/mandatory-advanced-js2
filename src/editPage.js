@@ -16,14 +16,13 @@ class EditPage extends Component {
         description: '',
         rating: 0.0
       },
-      redirect: false,
-
       errorMessages: {
         title: {value: false, mess: ''},
         director:  {value: false, mess: ''},
         description: {value: false, mess: ''},
         rating:  {value: false, mess: ''},
       },
+      redirect: false
     }
     this.serverUrl = this.serverUrl;
     this.movieIdUpdating = this.movieIdUpdating;
@@ -91,12 +90,11 @@ class EditPage extends Component {
       "rating": this.state.movieEdit.rating
     }
     let putUrl = this.serverUrl + this.movieIdUpdating;
-    console.log(putUrl);
     axios.put(putUrl, editMovie)
     .then((response) => {
       let myAddMovie = response.data;
       //If some error mess is showing it will remove all the error mess if the fields is according the condition
-      if (response.status === 201) {
+      if (response.status === 200) {
         this.setState({
           errorMessages: {
             ...this.state.errorMessages,
@@ -105,7 +103,7 @@ class EditPage extends Component {
             description: {value: false, mess: ''},
             rating:  {value: false, mess: ''}
           },
-          redirect: true
+          redirect: true,
         });
       }
     })
@@ -145,8 +143,10 @@ class EditPage extends Component {
     e.preventDefault();
   }
   render() {
-    if (this.state.redirect === true) return <Redirect to="/Main"/>;
-
+    if (this.state.redirect === true) {
+    console.log('Inne');
+      return <Redirect to="/"/>;
+    }
     let data = this.state.movieEdit;
 
     // Set first letter = Bigg

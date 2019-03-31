@@ -80,40 +80,38 @@ class MainPage extends Component {
           <meta charSet="utf-8" />
           <title>Movie API - Huvudsida</title>
         </Helmet>
-        <Router>
-          <div className="page">
-            <section id="searchMovie">
-              Sök efter en film:<br/>
-              <input type="text" onChange={ this.sortMovieList }/>
-            </section>
-            <table id="movies">
-              <thead>
-                <tr><th>Titel</th><th>Regissör</th><th>Betyg</th><th colSpan="3">Verktyg</th></tr>
-              </thead>
-              <tbody>
-               {
-                  filterList.map((obj) => {
-                    countMovie += 1;
-                    return (
-                      <tr key={countMovie}>
-                        <td>{ obj.title }</td><td>{ obj.director }</td><td>{ obj.rating }</td>
-                        <td>
-                          <button className="deleteBtn" id={ obj.id } onClick={ this.removeMovie } value={ countMovie }>Radera filmen</button>
-                        </td>
-                        <td value={ countMovie }>
-                          <Link to={"/Edit/" + obj.id} id={ obj.id } value={ countMovie }>Edit</Link>
-                        </td>
-                        <td value={ countMovie }>
-                          <Link to={"/Details/" + obj.id} id={ obj.id } value={ countMovie } onClick={ this.detailsPage }>Details</Link>
-                        </td>
-                      </tr>
-                    );
-                  })
-                }
-              </tbody>
-            </table>
-          </div>
-        </Router>
+        <div className="page">
+          <section id="searchMovie">
+            Sök efter en film:<br/>
+            <input type="text" onChange={ this.sortMovieList }/>
+          </section>
+          <table id="movies">
+            <thead>
+              <tr><th>Titel</th><th>Regissör</th><th>Betyg</th><th colSpan="3">Verktyg</th></tr>
+            </thead>
+            <tbody>
+             {
+                filterList.map((obj) => {
+                  countMovie += 1;
+                  return (
+                    <tr key={countMovie}>
+                      <td>{ obj.title }</td><td>{ obj.director }</td><td>{ obj.rating }</td>
+                      <td>
+                        <button className="deleteBtn" id={ obj.id } onClick={ this.removeMovie } value={ countMovie }>Radera filmen</button>
+                      </td>
+                      <td value={ countMovie }>
+                        <Link to={"/Edit/" + obj.id} id={ obj.id } value={ countMovie }>Edit</Link>
+                      </td>
+                      <td value={ countMovie }>
+                        <Link to={"/Details/" + obj.id} id={ obj.id } value={ countMovie } onClick={ this.detailsPage }>Details</Link>
+                      </td>
+                    </tr>
+                  );
+                })
+              }
+            </tbody>
+          </table>
+        </div>
       </>
     );
   }

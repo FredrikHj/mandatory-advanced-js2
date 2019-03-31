@@ -106,7 +106,7 @@ class AddPage extends Component {
     e.preventDefault();
   }
   render() {
-    if (this.state.redirect === true) return <Redirect to="/Main"/>;
+    if (this.state.redirect === true) return <Redirect to="/"/>;
     let errorStatus = this.state.errorMessages;
     return (
       <>
