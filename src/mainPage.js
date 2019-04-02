@@ -49,7 +49,7 @@ class MainPage extends Component {
   // A callback which will update the movieList with its incomming data
     // Removing the last index wich not contain any id from the server
   removeMovie(e) {
-    let targetRemoveBtnMovieIndex = e.target.value;
+    let targetRemoveBtnMovieIndex = parseInt(e.target.value);
     let targetRemoveBtnMovieId = e.target.id;
     let arrMovies = this.state.movieList;
 
@@ -60,9 +60,11 @@ class MainPage extends Component {
       ]
     });
     let newMovieList = [...this.state.movieList.slice(0, targetRemoveBtnMovieIndex), ...this.state.movieList.slice(targetRemoveBtnMovieIndex + 1)];
+
     this.setState({ movieList: newMovieList});
   }
   render() {
+    console.log(this.state.movieList);
     let countMovie = -1;
     let movieData = this.state.movieList;
     let filterList = movieData.filter((movieListData) =>

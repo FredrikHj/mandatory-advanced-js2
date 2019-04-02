@@ -65,13 +65,9 @@ class AddPage extends Component {
             description: {value: false, mess: ''},
             rating:  {value: false, mess: ''}
           },
-          redirect: true,
+        //  redirect: true,
         });
       }
-      // Call the callback function and send the data to it
-      console.log(this.props.updateMovieList);
-      //this.props.addMovieList(myAddMovie);
-      //this.props.pushMain();
     })
     // If not the con dition is meet it will show a error mess. One mess at a time, the first mess is showing fist
     .catch((error) => {
