@@ -65,7 +65,7 @@ class AddPage extends Component {
             description: {value: false, mess: ''},
             rating:  {value: false, mess: ''}
           },
-        //  redirect: true,
+          redirect: true,
         });
       }
     })
